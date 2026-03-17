@@ -17,7 +17,7 @@ async function updatePixela(date) {
   try {
     const formattedDate = date.replace(/-/g, '');
     const result = await db.get(
-      'SELECT COUNT(*) as count FROM tasks WHERE date = ? AND is_done = 1',
+      'SELECT COUNT(*) as count FROM tasks WHERE date = ? AND is_done = TRUE',
       [date]
     );
     const quantity = String(result ? result.count : 0);
@@ -38,6 +38,37 @@ async function updatePixela(date) {
     console.error('❌ Pixe.la update failed:', error.message);
   }
 }
+
+// GET /api/tasks/health — diagnostic endpoint
+router.get('/health', async (req, res) => {
+  try {
+    const hasDbUrl = !!process.env.DATABASE_URL;
+    const dbUrlPrefix = process.env.DATABASE_URL ? process.env.DATABASE_URL.substring(0, 30) + '...' : 'NOT SET';
+    
+    // Try a simple DB query
+    const result = await db.get('SELECT 1 as ok');
+    
+    res.json({
+      status: 'ok',
+      database: 'connected',
+      dbUrlConfigured: hasDbUrl,
+      dbUrlPrefix: dbUrlPrefix,
+      testQuery: result,
+      env: process.env.VERCEL ? 'vercel' : 'local',
+      nodeEnv: process.env.NODE_ENV || 'not set'
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      database: 'failed',
+      dbUrlConfigured: !!process.env.DATABASE_URL,
+      dbUrlPrefix: process.env.DATABASE_URL ? process.env.DATABASE_URL.substring(0, 30) + '...' : 'NOT SET',
+      error: error.message,
+      code: error.code,
+      env: process.env.VERCEL ? 'vercel' : 'local'
+    });
+  }
+});
 
 // GET /api/tasks/stats
 router.get('/stats', async (req, res) => {
@@ -73,7 +104,7 @@ router.get('/stats', async (req, res) => {
     });
   } catch (error) {
     console.error('Error fetching stats:', error);
-    res.status(500).json({ error: 'Failed to fetch stats' });
+    res.status(500).json({ error: 'Failed to fetch stats', detail: error.message });
   }
 });
 
@@ -91,7 +122,7 @@ router.get('/', async (req, res) => {
     res.json(tasks.map(t => ({ ...t, is_done: !!t.is_done })));
   } catch (error) {
     console.error('Error fetching tasks:', error);
-    res.status(500).json({ error: 'Failed to fetch tasks' });
+    res.status(500).json({ error: 'Failed to fetch tasks', detail: error.message });
   }
 });
 

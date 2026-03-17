@@ -164,7 +164,7 @@ router.delete('/:id', async (req, res) => {
 });
 
 // GET /api/tasks/history?days=30
-router.get('/history', (req, res) => {
+router.get('/history', async (req, res) => {
   try {
     const days = Math.min(parseInt(req.query.days) || 30, 365);
 
@@ -178,10 +178,10 @@ router.get('/history', (req, res) => {
 
     // Fetch aggregated DB rows in one query
     const startDate = dates[0];
-    const rows = db.all(
+    const rows = await db.all(
       `SELECT date,
               COUNT(*) AS total,
-              SUM(CASE WHEN is_done = 1 THEN 1 ELSE 0 END) AS completed
+              SUM(CASE WHEN is_done = TRUE THEN 1 ELSE 0 END) AS completed
        FROM tasks
        WHERE date >= ?
        GROUP BY date`,

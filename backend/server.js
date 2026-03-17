@@ -17,8 +17,8 @@ app.use(express.static(path.join(__dirname, '..', 'frontend')));
 // API Routes (loaded after DB is ready)
 app.use('/api/tasks', require('./routes/tasks'));
 
-// Serve index.html for root
-app.get('/', (req, res) => {
+// Serve index.html for root and all non-API routes (SPA fallback)
+app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'frontend', 'index.html'));
 });
 
@@ -28,17 +28,19 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Internal server error' });
 });
 
-// Initialize Database
-initDB().catch(err => {
+// DB initialization — must complete before handling requests on Vercel
+let dbReady = initDB().catch(err => {
   console.error('❌ Failed to initialize database:', err);
 });
 
-// Start server ONLY if not in Vercel (CommonJS check)
-if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
-  app.listen(PORT, () => {
-    console.log(`🚀 Daily Task Manager running at http://localhost:${PORT}`);
+// Start server ONLY if not in Vercel
+if (!process.env.VERCEL) {
+  dbReady.then(() => {
+    app.listen(PORT, () => {
+      console.log(`🚀 Daily Task Manager running at http://localhost:${PORT}`);
+    });
   });
 }
 
-// Export for Vercel
+// Export for Vercel serverless
 module.exports = app;

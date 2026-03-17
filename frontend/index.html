@@ -218,14 +218,14 @@
     transform: rotateX(45deg);
     transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
     filter: drop-shadow(0 20px 30px rgba(0,0,0,0.5));
-    animation: dynamic-motion 15s linear infinite;
+    animation: dynamic-motion 20s ease-in-out infinite;
   }
   @keyframes dynamic-motion {
-    0% { transform: rotateX(45deg) rotateZ(0deg) translateY(0); }
-    25% { transform: rotateX(50deg) rotateZ(90deg) translateY(-5px); }
-    50% { transform: rotateX(45deg) rotateZ(180deg) translateY(0); }
-    75% { transform: rotateX(40deg) rotateZ(270deg) translateY(5px); }
-    100% { transform: rotateX(45deg) rotateZ(360deg) translateY(0); }
+    0% { transform: rotateX(45deg) rotateZ(0deg); }
+    25% { transform: rotateX(48deg) rotateZ(3deg); }
+    50% { transform: rotateX(45deg) rotateZ(0deg); }
+    75% { transform: rotateX(42deg) rotateZ(-3deg); }
+    100% { transform: rotateX(45deg) rotateZ(0deg); }
   }
   .group\/pie:hover .pie-3d-container {
     scale: 1.05;
@@ -407,7 +407,7 @@
   </section>
 
   <!-- Feature Bento Grid -->
-  <section class="py-32 bg-[#0a0a0c]/50 relative reveal" data-purpose="features" id="features">
+  <section class="py-32 bg-[#0a0a0c]/50 relative" data-purpose="features" id="features">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-20">
         <h2 class="text-3xl lg:text-5xl font-bold text-white mb-6">Everything you need to thrive.</h2>
@@ -698,7 +698,7 @@
   </section>
 
   <!-- How It Works -->
-  <section class="py-32 bg-[#0a0a0c] relative reveal" id="how-it-works">
+  <section class="py-32 bg-[#0a0a0c] relative" id="how-it-works">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-20">
         <h2 class="text-3xl lg:text-5xl font-bold text-white mb-6">From Chaos to Clarity</h2>

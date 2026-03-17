@@ -1,0 +1,272 @@
+/* ============================================
+   Daily Tasks — DataStore-inspired Design
+   ============================================ */
+
+/* ─── Animations ─────────────────────────────── */
+@keyframes orb-float {
+  0%   { transform: translate(0, 0) scale(1); }
+  33%  { transform: translate(30px, -50px) scale(1.1); }
+  66%  { transform: translate(-20px, 20px) scale(0.9); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0);     }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes task-in {
+  from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* ─── Background Orbs ────────────────────────── */
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.18;
+  animation: orb-float 20s ease-in-out infinite;
+}
+
+/* ─── Cursor Glow ────────────────────────────── */
+#cursor-glow {
+  position: fixed;
+  width: 450px;
+  height: 450px;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.06) 0%, transparent 65%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+  transform: translate(-50%, -50%);
+  transition: left 0.08s linear, top 0.08s linear;
+}
+
+/* ─── Entrance Animation ─────────────────────── */
+.animate-entrance {
+  opacity: 0;
+  animation: slide-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* ─── Button Glow ────────────────────────────── */
+.btn-glow:hover {
+  box-shadow: 0 0 22px rgba(255, 255, 255, 0.25);
+}
+
+/* ─── Form Glow ──────────────────────────────── */
+.form-glow {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.form-glow:focus-within {
+  border-color: rgba(99, 102, 241, 0.3) !important;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.08), 0 25px 50px -12px rgba(0,0,0,0.5);
+}
+
+/* ─── Spinner ────────────────────────────────── */
+.spinner {
+  width: 34px;
+  height: 34px;
+  border: 3px solid rgba(255, 255, 255, 0.06);
+  border-top-color: rgba(99, 102, 241, 0.8);
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+  margin: 0 auto;
+}
+
+/* ─── Task Item ──────────────────────────────── */
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 1rem;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: task-in 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+  position: relative;
+  overflow: hidden;
+}
+
+.task-item::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255,255,255,0.05) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.task-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px -8px rgba(0,0,0,0.5);
+}
+
+.task-item:hover::after {
+  opacity: 1;
+}
+
+.task-item.done {
+  opacity: 0.5;
+}
+
+.task-item.done .task-title {
+  text-decoration: line-through;
+  color: #475569;
+}
+
+.task-item.done .task-desc {
+  text-decoration: line-through;
+}
+
+/* ─── Custom Checkbox ────────────────────────── */
+.task-checkbox {
+  position: relative;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.task-checkbox input {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  z-index: 1;
+  margin: 0;
+}
+
+.task-checkbox .checkmark {
+  position: absolute;
+  inset: 0;
+  width: 22px;
+  height: 22px;
+  border: 2px solid rgba(255,255,255,0.15);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+}
+
+.task-checkbox input:hover + .checkmark {
+  border-color: rgba(99, 102, 241, 0.6);
+}
+
+.task-checkbox input:checked + .checkmark {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border-color: transparent;
+  box-shadow: 0 0 12px rgba(99, 102, 241, 0.4);
+}
+
+.task-checkbox input:checked + .checkmark::after {
+  content: '';
+  width: 5px;
+  height: 9px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  margin-top: -2px;
+}
+
+/* ─── Task Content ───────────────────────────── */
+.task-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.task-title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #e2e8f0;
+  margin-bottom: 1px;
+  line-height: 1.4;
+  transition: color 0.2s, text-decoration 0.2s;
+}
+
+.task-desc {
+  font-size: 0.75rem;
+  color: #475569;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ─── Task Actions ───────────────────────────── */
+.task-actions {
+  display: flex;
+  gap: 5px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.task-item:hover .task-actions {
+  opacity: 1;
+}
+
+@media (max-width: 640px) {
+  .task-actions { opacity: 1; }
+}
+
+.action-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  color: #64748b;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.action-btn.edit:hover  { background: rgba(99,102,241,0.15); color: #818cf8; border-color: rgba(99,102,241,0.3); }
+.action-btn.delete:hover { background: rgba(239,68,68,0.15); color: #f87171; border-color: rgba(239,68,68,0.3); }
+
+/* ─── Modal ──────────────────────────────────── */
+.modal-overlay.active {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.modal-overlay.active .modal-card {
+  transform: scale(1) !important;
+}
+
+/* ─── Toast ──────────────────────────────────── */
+.toast.show {
+  opacity: 1 !important;
+  transform: translateX(-50%) translateY(0) !important;
+}
+
+.toast.success { border-color: rgba(99, 102, 241, 0.3); }
+.toast.error   { border-color: rgba(239, 68, 68, 0.3); }
+
+/* ─── Filter Tabs ────────────────────────────── */
+.filter-btn.active {
+  color: white;
+  background: rgba(255,255,255,0.1);
+}
+
+/* ─── Scrollbar ──────────────────────────────── */
+::-webkit-scrollbar       { width: 8px; }
+::-webkit-scrollbar-track { background: #0a0a0c; }
+::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #334155; }
+
+::selection { background: rgba(99,102,241,0.3); color: white; }

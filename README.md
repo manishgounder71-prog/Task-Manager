@@ -41,6 +41,12 @@ A premium, modern daily task manager built with a stunning 3D glassmorphism UI. 
    - `NVIDIA_API_KEY`: Your NVIDIA AI API key.
    - `PIXELA_USERNAME`: (Optional) Your Pixe.la username for habit tracking.
 
+### 4. Vercel Deployment (Optional)
+The project is pre-configured for **Vercel**. To deploy:
+1. Connect your GitHub repository to Vercel.
+2. Add the environment variables from your `.env` to the Vercel Dashboard.
+3. Vercel will automatically use the `vercel.json` configuration for routing.
+
 ### 4. Running the App
 Start the server:
 ```bash

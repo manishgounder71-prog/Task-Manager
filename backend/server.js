@@ -28,12 +28,17 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Internal server error' });
 });
 
-// Initialize Database, then start server
-initDB().then(() => {
+// Initialize Database
+initDB().catch(err => {
+  console.error('❌ Failed to initialize database:', err);
+});
+
+// Start server ONLY if not in Vercel (CommonJS check)
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
   app.listen(PORT, () => {
     console.log(`🚀 Daily Task Manager running at http://localhost:${PORT}`);
   });
-}).catch(err => {
-  console.error('❌ Failed to initialize database:', err);
-  process.exit(1);
-});
+}
+
+// Export for Vercel
+module.exports = app;

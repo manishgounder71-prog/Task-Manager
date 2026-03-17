@@ -1,19 +1,36 @@
 const { Pool } = require('pg');
 require('dotenv').config();
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false // Required for Supabase/Neon in many environments
+let pool = null;
+let dbInitialized = false;
+
+function getPool() {
+  if (!pool) {
+    if (!process.env.DATABASE_URL) {
+      throw new Error('DATABASE_URL environment variable is not set');
+    }
+    pool = new Pool({
+      connectionString: process.env.DATABASE_URL,
+      ssl: {
+        rejectUnauthorized: false
+      },
+      // Serverless-friendly settings
+      max: 5,
+      idleTimeoutMillis: 30000,
+      connectionTimeoutMillis: 10000,
+    });
   }
-});
+  return pool;
+}
 
 async function initDB() {
-  const client = await pool.connect();
+  if (dbInitialized) return;
+  
+  const p = getPool();
+  const client = await p.connect();
   try {
     console.log('🔄 Initializing PostgreSQL database...');
     
-    // Create tasks table if not exists
     await client.query(`
       CREATE TABLE IF NOT EXISTS tasks (
         id SERIAL PRIMARY KEY,
@@ -26,24 +43,25 @@ async function initDB() {
       )
     `);
 
-    // Create index for faster date queries
     await client.query(`CREATE INDEX IF NOT EXISTS idx_tasks_date ON tasks(date)`);
     
+    dbInitialized = true;
     console.log('✅ PostgreSQL Database initialized and ready.');
   } finally {
     client.release();
   }
 }
 
+// Convert SQLite ? placeholders to PG $1, $2, etc.
+function convertPlaceholders(sql) {
+  let paramIndex = 0;
+  return sql.replace(/\?/g, () => `$${++paramIndex}`);
+}
+
 // Helper: run a query and return all rows
 async function all(sql, params = []) {
-  // Convert SQLite ? to PG $1, $2, etc. (Simplistic version)
-  const convertedSql = sql.replace(/\?/g, (_, offset) => {
-    let count = (sql.substring(0, offset).match(/\?/g) || []).length + 1;
-    return `$${count}`;
-  });
-  
-  const res = await pool.query(convertedSql, params);
+  await initDB(); // Ensure DB is initialized before any query
+  const res = await getPool().query(convertPlaceholders(sql), params);
   return res.rows;
 }
 
@@ -55,13 +73,9 @@ async function get(sql, params = []) {
 
 // Helper: run an insert/update/delete
 async function run(sql, params = []) {
-  const convertedSql = sql.replace(/\?/g, (_, offset) => {
-    let count = (sql.substring(0, offset).match(/\?/g) || []).length + 1;
-    return `$${count}`;
-  });
-
-  const res = await pool.query(convertedSql, params);
+  await initDB();
+  const res = await getPool().query(convertPlaceholders(sql), params);
   return { lastInsertRowid: res.rows[0]?.id || null };
 }
 
-module.exports = { initDB, all, get, run, pool };
+module.exports = { initDB, all, get, run, getPool };

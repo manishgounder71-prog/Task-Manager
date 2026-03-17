@@ -2,7 +2,6 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const { initDB } = require('./database');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -14,7 +13,7 @@ app.use(express.json());
 // Serve static frontend files
 app.use(express.static(path.join(__dirname, '..', 'frontend')));
 
-// API Routes (loaded after DB is ready)
+// API Routes — DB init happens lazily inside each query (see database.js)
 app.use('/api/tasks', require('./routes/tasks'));
 
 // Serve index.html for root and all non-API routes (SPA fallback)
@@ -28,17 +27,16 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Internal server error' });
 });
 
-// DB initialization — must complete before handling requests on Vercel
-let dbReady = initDB().catch(err => {
-  console.error('❌ Failed to initialize database:', err);
-});
-
-// Start server ONLY if not in Vercel
+// Start server ONLY if not in Vercel (locally)
 if (!process.env.VERCEL) {
-  dbReady.then(() => {
+  const { initDB } = require('./database');
+  initDB().then(() => {
     app.listen(PORT, () => {
       console.log(`🚀 Daily Task Manager running at http://localhost:${PORT}`);
     });
+  }).catch(err => {
+    console.error('❌ Failed to initialize database:', err);
+    process.exit(1);
   });
 }
 

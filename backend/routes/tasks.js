@@ -8,9 +8,15 @@ const PIXELA_USERNAME = process.env.PIXELA_USERNAME;
 const PIXELA_TOKEN = process.env.PIXELA_TOKEN;
 const PIXELA_GRAPH_ID = process.env.PIXELA_GRAPH_ID;
 
+// Helper: Get local YYYY-MM-DD
+function getLocalToday() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
 // Helper: Update Pixe.la graph
 async function updatePixela(date) {
-  if (!PIXELA_USERNAME || PIXELA_USERNAME === 'your_username') {
+  if (!PIXELA_USERNAME || PIXELA_USERNAME === 'your_username' || !PIXELA_TOKEN) {
     console.log('⚠️  Pixe.la not configured, skipping graph update');
     return;
   }
@@ -55,7 +61,8 @@ router.get('/health', async (req, res) => {
       dbUrlPrefix: dbUrlPrefix,
       testQuery: result,
       env: process.env.VERCEL ? 'vercel' : 'local',
-      nodeEnv: process.env.NODE_ENV || 'not set'
+      nodeEnv: process.env.NODE_ENV || 'not set',
+      localTime: new Date().toLocaleString()
     });
   } catch (error) {
     res.status(500).json({
@@ -75,7 +82,8 @@ router.get('/stats', async (req, res) => {
   try {
     const total = (await db.get('SELECT COUNT(*) as count FROM tasks')) || { count: 0 };
     const completed = (await db.get('SELECT COUNT(*) as count FROM tasks WHERE is_done = TRUE')) || { count: 0 };
-    const todayDate = new Date().toISOString().split('T')[0];
+    
+    const todayDate = getLocalToday();
     const todayTotal = (await db.get('SELECT COUNT(*) as count FROM tasks WHERE date = ?', [todayDate])) || { count: 0 };
     const todayDone = (await db.get('SELECT COUNT(*) as count FROM tasks WHERE date = ? AND is_done = TRUE', [todayDate])) || { count: 0 };
 
@@ -141,7 +149,7 @@ router.post('/', async (req, res) => {
     res.status(201).json({ ...task, is_done: !!task.is_done });
   } catch (error) {
     console.error('Error creating task:', error);
-    res.status(500).json({ error: 'Failed to create task' });
+    res.status(500).json({ error: 'Failed to create task', detail: error.message });
   }
 });
 
@@ -173,7 +181,7 @@ router.put('/:id', async (req, res) => {
     res.json({ ...task, is_done: !!task.is_done });
   } catch (error) {
     console.error('Error updating task:', error);
-    res.status(500).json({ error: 'Failed to update task' });
+    res.status(500).json({ error: 'Failed to update task', detail: error.message });
   }
 });
 
@@ -190,7 +198,7 @@ router.delete('/:id', async (req, res) => {
     res.json({ message: 'Task deleted successfully' });
   } catch (error) {
     console.error('Error deleting task:', error);
-    res.status(500).json({ error: 'Failed to delete task' });
+    res.status(500).json({ error: 'Failed to delete task', detail: error.message });
   }
 });
 
@@ -204,7 +212,8 @@ router.get('/history', async (req, res) => {
     for (let i = days - 1; i >= 0; i--) {
       const d = new Date();
       d.setDate(d.getDate() - i);
-      dates.push(d.toISOString().split('T')[0]);
+      const dateStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      dates.push(dateStr);
     }
 
     // Fetch aggregated DB rows in one query
@@ -233,14 +242,14 @@ router.get('/history', async (req, res) => {
     res.json(history);
   } catch (error) {
     console.error('Error fetching history:', error);
-    res.status(500).json({ error: 'Failed to fetch history' });
+    res.status(500).json({ error: 'Failed to fetch history', detail: error.message });
   }
 });
 
 // POST /api/tasks/ai/suggest
 router.post('/ai/suggest', async (req, res) => {
   try {
-    const todayDate = new Date().toISOString().split('T')[0];
+    const todayDate = getLocalToday();
     const tasks = await db.all('SELECT title, is_done FROM tasks WHERE date = ?', [todayDate]);
     
     if (tasks.length === 0) {
@@ -257,7 +266,7 @@ router.post('/ai/suggest', async (req, res) => {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "qwen/qwen3.5-122b-a10b",
+        model: "qwen/qwen2.5-72b-instruct",
         messages: [{ role: "user", content: prompt }],
         max_tokens: 100,
         temperature: 0.7
@@ -270,7 +279,7 @@ router.post('/ai/suggest', async (req, res) => {
     res.json({ suggestion });
   } catch (error) {
     console.error('AI Suggestion Error:', error);
-    res.status(500).json({ error: 'Failed to generate AI suggestion' });
+    res.status(500).json({ error: 'Failed to generate AI suggestion', detail: error.message });
   }
 });
 
@@ -282,7 +291,7 @@ router.post('/ai/chat', async (req, res) => {
       return res.status(400).json({ error: 'Question is required' });
     }
 
-    const todayDate = new Date().toISOString().split('T')[0];
+    const todayDate = getLocalToday();
     const tasks = await db.all('SELECT title, is_done FROM tasks WHERE date = ?', [todayDate]);
     
     const taskSummary = tasks.length > 0 
@@ -304,7 +313,7 @@ Please provide a concise, helpful response (under 50 words) based on their tasks
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "qwen/qwen3.5-122b-a10b",
+        model: "qwen/qwen2.5-72b-instruct",
         messages: [{ role: "user", content: prompt }],
         max_tokens: 150,
         temperature: 0.7
@@ -317,11 +326,8 @@ Please provide a concise, helpful response (under 50 words) based on their tasks
     res.json({ answer });
   } catch (error) {
     console.error('AI Chat Error:', error);
-    res.status(500).json({ error: 'Failed to generate AI response' });
+    res.status(500).json({ error: 'Failed to generate AI response', detail: error.message });
   }
 });
 
 module.exports = router;
-
-
-

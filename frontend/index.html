@@ -454,7 +454,10 @@
             <p class="text-slate-400 text-sm leading-relaxed">Your real-time completion status for today.</p>
           </div>
           <div class="mt-8 flex flex-col items-center justify-center relative h-80 group/pie chart-3d-wrapper">
-             <div class="pie-3d-container w-full h-full flex items-center justify-center">
+             <!-- New Particle Layer -->
+             <div id="pieParticles" class="absolute inset-0 pointer-events-none overflow-hidden rounded-[2rem] z-0"></div>
+             
+             <div class="pie-3d-container w-full h-full flex items-center justify-center relative z-10 transition-transform duration-200 ease-out">
                <svg class="w-64 h-64 overflow-visible">
                  <defs>
                    <linearGradient id="pieGradientMain" x1="0%" y1="0%" x2="100%" y2="100%">

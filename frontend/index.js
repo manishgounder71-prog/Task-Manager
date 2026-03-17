@@ -16,7 +16,46 @@ window.handleBentoHover = function(e, el) {
   const y = e.clientY - rect.top;
   el.style.setProperty('--mouse-x', `${x}px`);
   el.style.setProperty('--mouse-y', `${y}px`);
+
+  // 3D Parallax Tilt
+  const pieContainer = el.querySelector('.pie-3d-container');
+  if (pieContainer) {
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateX = (y - centerY) / 10; // Max ~15-20 deg
+    const rotateY = (centerX - x) / 10;
+    pieContainer.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+  }
 };
+
+// Reset 3D Tilt on Mouse Out
+document.addEventListener('mouseover', (e) => {
+  if (!e.target.closest('.bento-card')) {
+    const containers = document.querySelectorAll('.pie-3d-container');
+    containers.forEach(c => c.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)');
+  }
+});
+
+function initParticles() {
+  const container = document.getElementById('pieParticles');
+  if (!container) return;
+  
+  // Clear existing
+  container.innerHTML = '';
+  
+  for (let i = 0; i < 15; i++) {
+    const p = document.createElement('div');
+    p.className = 'absolute bg-indigo-400/30 rounded-full blur-[1px]';
+    const size = Math.random() * 4 + 2;
+    p.style.width = `${size}px`;
+    p.style.height = `${size}px`;
+    p.style.left = `${Math.random() * 100}%`;
+    p.style.bottom = `-10px`;
+    p.style.animation = `particle-float ${Math.random() * 3 + 3}s linear infinite`;
+    p.style.animationDelay = `${Math.random() * 5}s`;
+    container.appendChild(p);
+  }
+}
 
 // ─── Helpers ─────────────────────────────────
 function todayStr() {
@@ -195,73 +234,63 @@ function updateProgress() {
   }
 
   // Bento & Pie Chart updates
-  renderPieChart(done, total);
+  updatePieChart(done, total);
   updateBentoTasks();
+  
+  // Update sparkline trend
+  const pct = total === 0 ? 0 : Math.round((done / total) * 100);
+  renderProgressLineGraph(pct);
 }
 
 /**
  * Updates the 3D circular progress pie in the bento grid
  */
-function renderPieChart(done, total) {
-  const pieFace = document.getElementById('progressPie3D');
+function updatePieChart(completed, total) {
+  const pie = document.getElementById('progressPie3D');
+  const edge = document.getElementById('progressPie3DEdge');
   const pieRemaining = document.getElementById('progressPie3DRemaining');
-  const pieEdge = document.getElementById('progressPie3DEdge');
   const percentText = document.getElementById('progressPiePercent');
   const statsText = document.getElementById('progressPieStats');
-  if (!pieFace || !percentText || !statsText) return;
 
-  const pct = total === 0 ? 0 : Math.round((done / total) * 100);
-  const circumference = 722; // r=115, 2*PI*115 ≈ 722
+  if (!pie || !edge) return;
+
+  const pct = total === 0 ? 0 : Math.round((completed / total) * 100);
+  const circumference = 722; // r=115
   const offset = circumference - (pct / 100) * circumference;
-  
-  // Dynamic color selection for the 'real' look (Reference-inspired)
-  let mainColor = '#818cf8'; // Indigo
+
+  pie.style.strokeDashoffset = offset;
+  edge.style.strokeDashoffset = offset;
+
+  // Dynamic colors & Glow
   let remainingColor = 'rgba(255,255,255,0.05)';
-  
-  if (pct >= 100) {
-    mainColor = '#10b981'; // Emerald/Green
-  } else if (pct > 75) {
-    mainColor = '#60a5fa'; // Blue
-  } else if (pct > 40) {
-    mainColor = '#818cf8'; // Indigo
-    remainingColor = 'rgba(244, 63, 94, 0.1)'; // Slight red tint for remaining
-  } else if (pct > 0) {
-    mainColor = '#f59e0b'; // Amber
-    remainingColor = 'rgba(244, 63, 94, 0.15)'; // Red background
+  if (pct === 100) {
+    remainingColor = 'rgba(16, 185, 129, 0.1)'; 
+    pie.style.filter = 'drop-shadow(0 0 15px rgba(99, 102, 241, 0.6))';
+    pie.style.animation = 'pulse-glow 3s ease-in-out infinite';
   } else {
-    mainColor = '#64748b'; // Slate
+    pie.style.filter = 'none';
+    pie.style.animation = 'none';
+    if (pct > 80) remainingColor = 'rgba(244, 63, 94, 0.1)';
   }
+  pieRemaining.style.stroke = remainingColor;
 
-  // Update segments
-  pieFace.style.strokeDasharray = `${circumference}`;
-  pieFace.style.strokeDashoffset = `${offset}`;
-  pieFace.style.stroke = mainColor;
-  
-  if (pieRemaining) {
-    pieRemaining.style.stroke = remainingColor;
-  }
-  
-  // Update 3D edge
-  if (pieEdge) {
-    pieEdge.style.strokeDasharray = `${circumference}`;
-    pieEdge.style.strokeDashoffset = `${offset}`;
-    pieEdge.style.stroke = pct > 0 ? 'rgba(0,0,0,0.6)' : 'transparent';
-  }
-  
-  // Pulse animation for the percentage text when it changes
-  if (percentText.textContent !== `${pct}%`) {
-    percentText.animate([
-      { transform: 'scale(1)', filter: 'brightness(1)' },
-      { transform: 'scale(1.1)', filter: 'brightness(1.5)' },
-      { transform: 'scale(1)', filter: 'brightness(1)' }
-    ], { duration: 400, easing: 'ease-out' });
-  }
+  // Counter animation
+  let current = parseInt(percentText.textContent) || 0;
+  const duration = 800;
+  const start = performance.now();
 
-  percentText.textContent = `${pct}%`;
-  statsText.textContent = `${done}/${total} Tasks`;
+  function animate(time) {
+    const elapsed = time - start;
+    const progress = Math.min(elapsed / duration, 1);
+    const ease = 1 - Math.pow(1 - progress, 3);
+    const val = Math.round(current + (pct - current) * ease);
+    percentText.textContent = `${val}%`;
+    if (progress < 1) requestAnimationFrame(animate);
+    else if (pct === 100 && current < 100) initParticles(); // Fireworks!
+  }
+  requestAnimationFrame(animate);
 
-  // Also update the sparkline
-  renderProgressLineGraph(pct);
+  statsText.textContent = `${completed}/${total} Tasks`;
 }
 
 /**
@@ -297,7 +326,12 @@ function renderProgressLineGraph(currentPct) {
   fillD += ` L ${width} ${height} Z`;
 
   path.setAttribute('d', d);
-  fill.setAttribute('d', fillD);
+  fill.setAttribute('d', d + ` L ${width},${height} L 0,${height} Z`);
+
+  // Animate the drawing
+  path.style.strokeDasharray = '280';
+  path.style.strokeDashoffset = '280';
+  path.style.animation = 'path-draw 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards';
 
   // Update trend text
   if (trend) {
@@ -775,6 +809,7 @@ function renderBarChart(history) {
 document.addEventListener('DOMContentLoaded', () => {
   // Initial load
   loadTasks();
+  initParticles();
 
   // Date navigation
   document.getElementById('prevDay').addEventListener('click', () => shiftDate(-1));

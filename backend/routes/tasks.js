@@ -140,9 +140,18 @@ router.post('/', async (req, res) => {
     const { title, description, date } = req.body;
     if (!title || !date) return res.status(400).json({ error: 'Title and date are required' });
 
+    // Server-side duplicate check: same title (case-insensitive) on the same date
+    const existing = await db.get(
+      'SELECT id FROM tasks WHERE date = ? AND LOWER(title) = LOWER(?)',
+      [date, title.trim()]
+    );
+    if (existing) {
+      return res.status(409).json({ error: 'This task is already added for this date!' });
+    }
+
     const result = await db.run(
-      'INSERT INTO tasks (title, description, date) VALUES (?, ?, ?) RETURNING id',
-      [title, description || '', date]
+      'INSERT INTO tasks (title, description, date) VALUES (?, ?, ?)',
+      [title.trim(), description || '', date]
     );
 
     const task = await db.get('SELECT * FROM tasks WHERE id = ?', [result.lastInsertRowid]);

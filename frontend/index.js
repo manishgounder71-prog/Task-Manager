@@ -149,9 +149,16 @@ function renderTasks() {
   const filtered = getFilteredTasks();
 
   if (filtered.length === 0) {
-    emptyState.style.display = 'block';
+    // Show empty state, hide task list
+    emptyState.style.display = 'flex';
+    emptyState.classList.remove('hidden');
+    list.style.display = 'none';
   } else {
+    // Hide empty state, show task list
     emptyState.style.display = 'none';
+    emptyState.classList.add('hidden');
+    list.style.display = 'flex';
+    list.style.flexDirection = 'column';
     filtered.forEach(task => {
       list.appendChild(createTaskElement(task));
     });
@@ -181,7 +188,8 @@ function createTaskElement(task) {
           <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
         </svg>
       </button>
-      <button class="action-btn delete" title="Delete task" aria-label="Delete">
+      <button class="action-btn delete" title="${task.is_done ? 'Delete task' : 'Complete task first to delete'}" aria-label="Delete"
+        style="${task.is_done ? '' : 'opacity:0.35; cursor:not-allowed;'}">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="3 6 5 6 21 6"></polyline>
           <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
@@ -503,6 +511,13 @@ async function handleToggleDone(id, isDone, itemEl) {
 }
 
 async function handleDelete(id, itemEl) {
+  // Guard: only allow deletion of completed tasks
+  const task = allTasks.find(t => t.id === id);
+  if (task && !task.is_done) {
+    showToast('⚠️ Complete the task before deleting it!', 'error');
+    return;
+  }
+
   try {
     itemEl.style.opacity = '0';
     itemEl.style.transform = 'translateX(30px)';
@@ -869,21 +884,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!title) return;
 
+    // Client-side duplicate guard (case-insensitive) for instant feedback
+    const duplicate = allTasks.find(t => t.title.trim().toLowerCase() === title.toLowerCase());
+    if (duplicate) {
+      showToast('⚠️ This task is already added!', 'error');
+      titleEl.select();
+      return;
+    }
+
     const btn = e.target.querySelector('button[type="submit"]');
     btn.disabled = true;
-    btn.textContent = 'Adding...';
+    btn.innerHTML = `<svg class="animate-spin inline w-4 h-4 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>Adding...`;
 
     try {
-      const task = await createTask(title, description, currentDate);
-      allTasks.unshift(task);
+      await createTask(title, description, currentDate);
       titleEl.value = '';
       descEl.value = '';
-      renderTasks();
-      showToast('Task added!');
-      await refreshStats();
-      if (graphLoaded) loadGraph();
+      showToast('Task added! ✅');
+      // Re-fetch from server to guarantee fresh, correctly ordered list
+      await loadTasks();
     } catch (err) {
-      showToast(err.message, 'error');
+      // Server-side duplicate or other error
+      showToast('⚠️ ' + err.message, 'error');
+      titleEl.select();
     } finally {
       btn.disabled = false;
       btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Add Task`;

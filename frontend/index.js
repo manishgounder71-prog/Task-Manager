@@ -261,89 +261,23 @@ function updateProgress() {
 }
 
 /**
- * Updates the 3D circular progress pie in the bento grid
+ * Updates the circular progress pie in the bento grid
  */
 function updatePieChart(completed, total) {
-  const pie = document.getElementById('progressPie3D');
-  const edge = document.getElementById('progressPie3DEdge');
-  const pieRemaining = document.getElementById('progressPie3DRemaining');
+  const pie = document.getElementById('progressPie');
   const percentText = document.getElementById('progressPiePercent');
   const statsText = document.getElementById('progressPieStats');
-  const pieGlow = document.getElementById('pieGlow');
-  const ring1 = document.getElementById('progressRing1');
-  const ring2 = document.getElementById('progressRing2');
 
-  if (!pie || !edge) return;
+  if (!pie) return;
 
   const pct = total === 0 ? 0 : Math.round((completed / total) * 100);
-  const circumference = 678.58; // r=108
+  const circumference = 251.32; // r=40
   const offset = circumference - (pct / 100) * circumference;
 
-  // Update pie chart
   pie.style.strokeDashoffset = offset;
-  edge.style.strokeDashoffset = offset;
 
-  // Dynamic colors based on progress
-  let gradientId = 'pieGradientMain';
-  let remainingColor = isDarkMode() ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
-  let glowColor = 'rgba(99, 102, 241, 0.3)';
-  
-  if (pct === 100) {
-    // Complete - Success state
-    gradientId = 'pieGradientSuccess';
-    remainingColor = 'rgba(16, 185, 129, 0.15)';
-    glowColor = 'rgba(16, 185, 129, 0.4)';
-    pie.style.filter = 'url(#pieShadow)';
-    pie.style.animation = 'pie-pulse 2s ease-in-out infinite';
-    if (pieGlow) {
-      pieGlow.style.background = 'radial-gradient(circle, rgba(16, 185, 129, 0.3) 0%, transparent 70%)';
-      pieGlow.style.opacity = '1';
-    }
-    // Fireworks!
-    createCelebrationParticles();
-  } else if (pct >= 75) {
-    // Almost there - Warning state
-    remainingColor = 'rgba(251, 191, 36, 0.15)';
-    glowColor = 'rgba(251, 191, 36, 0.3)';
-    pie.style.filter = 'url(#pieShadow)';
-    pie.style.animation = 'pie-pulse-subtle 3s ease-in-out infinite';
-    if (pieGlow) {
-      pieGlow.style.background = 'radial-gradient(circle, rgba(251, 191, 36, 0.2) 0%, transparent 70%)';
-      pieGlow.style.opacity = '0.7';
-    }
-  } else {
-    // Normal state
-    pie.style.filter = 'url(#pieShadow)';
-    pie.style.animation = 'none';
-    if (pieGlow) {
-      pieGlow.style.background = 'radial-gradient(circle, rgba(99, 102, 241, 0.2) 0%, transparent 70%)';
-      pieGlow.style.opacity = pct > 0 ? '0.5' : '0';
-    }
-  }
-  
-  // Update gradient
-  pie.setAttribute('stroke', `url(#${gradientId})`);
-  pieRemaining.style.stroke = remainingColor;
+  statsText.textContent = `${completed}/${total} Tasks`;
 
-  // Animate outer rings
-  if (ring1) {
-    ring1.style.strokeDasharray = `${pct * 7.5}`;
-    ring1.style.strokeDashoffset = '0';
-    ring1.style.opacity = pct > 0 ? '0.3' : '0';
-    ring1.style.animation = pct > 0 ? 'ring-expand 2s ease-out forwards' : 'none';
-  }
-  if (ring2) {
-    setTimeout(() => {
-      if (ring2) {
-        ring2.style.strokeDasharray = `${pct * 8}`;
-        ring2.style.strokeDashoffset = '0';
-        ring2.style.opacity = pct > 0 ? '0.2' : '0';
-        ring2.style.animation = pct > 0 ? 'ring-expand 3s ease-out forwards' : 'none';
-      }
-    }, 200);
-  }
-
-  // Counter animation with bounce
   let current = parseInt(percentText.textContent) || 0;
   const duration = 1000;
   const start = performance.now();
@@ -351,15 +285,12 @@ function updatePieChart(completed, total) {
   function animate(time) {
     const elapsed = time - start;
     const progress = Math.min(elapsed / duration, 1);
-    // Elastic ease out
-    const ease = 1 - Math.pow(1 - progress, 3) * Math.cos(progress * Math.PI * 0.5);
+    const ease = 1 - Math.pow(1 - progress, 3);
     const val = Math.round(current + (pct - current) * ease);
     percentText.textContent = `${val}%`;
     if (progress < 1) requestAnimationFrame(animate);
   }
   requestAnimationFrame(animate);
-
-  statsText.textContent = `${completed}/${total} Tasks`;
 }
 
 /**

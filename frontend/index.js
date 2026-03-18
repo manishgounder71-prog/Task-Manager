@@ -1263,10 +1263,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const themeToggleBtn = document.getElementById('themeToggle');
   const htmlEl = document.documentElement;
   
-  if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-    htmlEl.classList.add('dark');
-  } else {
+  if (localStorage.getItem('theme') === 'light') {
     htmlEl.classList.remove('dark');
+  } else {
+    htmlEl.classList.add('dark');
   }
 
   if (themeToggleBtn) {

@@ -50,6 +50,59 @@
   50% { filter: drop-shadow(0 0 35px rgba(129, 140, 248, 0.7)); }
 }
 
+@keyframes pie-pulse {
+  0%, 100% { 
+    filter: drop-shadow(0 0 15px rgba(99, 102, 241, 0.5));
+    transform: scale(1);
+  }
+  50% { 
+    filter: drop-shadow(0 0 30px rgba(99, 102, 241, 0.8));
+    transform: scale(1.03);
+  }
+}
+
+@keyframes pie-pulse-subtle {
+  0%, 100% { filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.3)); }
+  50% { filter: drop-shadow(0 0 20px rgba(251, 191, 36, 0.5)); }
+}
+
+@keyframes ring-expand {
+  0% { 
+    transform: scale(0.8) rotate(0deg); 
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% { 
+    transform: scale(1.2) rotate(180deg); 
+    opacity: 0;
+  }
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.1); }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 4s ease-in-out infinite;
+}
+
+@keyframes float-up {
+  0% { transform: translateY(0) scale(1); opacity: 1; }
+  100% { transform: translateY(-80px) scale(0.3); opacity: 0; }
+}
+
+.percent-glow {
+  text-shadow: 0 0 30px rgba(99, 102, 241, 0.5), 0 0 60px rgba(99, 102, 241, 0.3);
+  transition: text-shadow 0.5s ease;
+}
+
+.percent-glow.complete {
+  text-shadow: 0 0 30px rgba(16, 185, 129, 0.6), 0 0 60px rgba(16, 185, 129, 0.4);
+}
+
 /* ─── Background Orbs ────────────────────────── */
 .orb {
   position: absolute;

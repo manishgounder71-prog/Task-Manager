@@ -269,46 +269,135 @@ function updatePieChart(completed, total) {
   const pieRemaining = document.getElementById('progressPie3DRemaining');
   const percentText = document.getElementById('progressPiePercent');
   const statsText = document.getElementById('progressPieStats');
+  const pieGlow = document.getElementById('pieGlow');
+  const ring1 = document.getElementById('progressRing1');
+  const ring2 = document.getElementById('progressRing2');
 
   if (!pie || !edge) return;
 
   const pct = total === 0 ? 0 : Math.round((completed / total) * 100);
-  const circumference = 722; // r=115
+  const circumference = 678.58; // r=108
   const offset = circumference - (pct / 100) * circumference;
 
+  // Update pie chart
   pie.style.strokeDashoffset = offset;
   edge.style.strokeDashoffset = offset;
 
-  // Dynamic colors & Glow
-  let remainingColor = isDarkMode() ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
+  // Dynamic colors based on progress
+  let gradientId = 'pieGradientMain';
+  let remainingColor = isDarkMode() ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
+  let glowColor = 'rgba(99, 102, 241, 0.3)';
+  
   if (pct === 100) {
-    remainingColor = 'rgba(16, 185, 129, 0.1)'; 
-    pie.style.filter = 'drop-shadow(0 0 15px rgba(99, 102, 241, 0.6))';
-    pie.style.animation = 'pulse-glow 3s ease-in-out infinite';
+    // Complete - Success state
+    gradientId = 'pieGradientSuccess';
+    remainingColor = 'rgba(16, 185, 129, 0.15)';
+    glowColor = 'rgba(16, 185, 129, 0.4)';
+    pie.style.filter = 'url(#pieShadow)';
+    pie.style.animation = 'pie-pulse 2s ease-in-out infinite';
+    if (pieGlow) {
+      pieGlow.style.background = 'radial-gradient(circle, rgba(16, 185, 129, 0.3) 0%, transparent 70%)';
+      pieGlow.style.opacity = '1';
+    }
+    // Fireworks!
+    createCelebrationParticles();
+  } else if (pct >= 75) {
+    // Almost there - Warning state
+    remainingColor = 'rgba(251, 191, 36, 0.15)';
+    glowColor = 'rgba(251, 191, 36, 0.3)';
+    pie.style.filter = 'url(#pieShadow)';
+    pie.style.animation = 'pie-pulse-subtle 3s ease-in-out infinite';
+    if (pieGlow) {
+      pieGlow.style.background = 'radial-gradient(circle, rgba(251, 191, 36, 0.2) 0%, transparent 70%)';
+      pieGlow.style.opacity = '0.7';
+    }
   } else {
-    pie.style.filter = 'none';
+    // Normal state
+    pie.style.filter = 'url(#pieShadow)';
     pie.style.animation = 'none';
-    if (pct > 80) remainingColor = 'rgba(244, 63, 94, 0.1)';
+    if (pieGlow) {
+      pieGlow.style.background = 'radial-gradient(circle, rgba(99, 102, 241, 0.2) 0%, transparent 70%)';
+      pieGlow.style.opacity = pct > 0 ? '0.5' : '0';
+    }
   }
+  
+  // Update gradient
+  pie.setAttribute('stroke', `url(#${gradientId})`);
   pieRemaining.style.stroke = remainingColor;
 
-  // Counter animation
+  // Animate outer rings
+  if (ring1) {
+    ring1.style.strokeDasharray = `${pct * 7.5}`;
+    ring1.style.strokeDashoffset = '0';
+    ring1.style.opacity = pct > 0 ? '0.3' : '0';
+    ring1.style.animation = pct > 0 ? 'ring-expand 2s ease-out forwards' : 'none';
+  }
+  if (ring2) {
+    setTimeout(() => {
+      if (ring2) {
+        ring2.style.strokeDasharray = `${pct * 8}`;
+        ring2.style.strokeDashoffset = '0';
+        ring2.style.opacity = pct > 0 ? '0.2' : '0';
+        ring2.style.animation = pct > 0 ? 'ring-expand 3s ease-out forwards' : 'none';
+      }
+    }, 200);
+  }
+
+  // Counter animation with bounce
   let current = parseInt(percentText.textContent) || 0;
-  const duration = 800;
+  const duration = 1000;
   const start = performance.now();
 
   function animate(time) {
     const elapsed = time - start;
     const progress = Math.min(elapsed / duration, 1);
-    const ease = 1 - Math.pow(1 - progress, 3);
+    // Elastic ease out
+    const ease = 1 - Math.pow(1 - progress, 3) * Math.cos(progress * Math.PI * 0.5);
     const val = Math.round(current + (pct - current) * ease);
     percentText.textContent = `${val}%`;
     if (progress < 1) requestAnimationFrame(animate);
-    else if (pct === 100 && current < 100) initParticles(); // Fireworks!
   }
   requestAnimationFrame(animate);
 
   statsText.textContent = `${completed}/${total} Tasks`;
+}
+
+/**
+ * Creates celebration particles when task is 100% complete
+ */
+function createCelebrationParticles() {
+  const container = document.getElementById('celebrationParticles');
+  if (!container) return;
+  
+  container.innerHTML = '';
+  
+  const colors = ['#818cf8', '#6366f1', '#34d399', '#fbbf24', '#f472b6'];
+  
+  for (let i = 0; i < 30; i++) {
+    const particle = document.createElement('div');
+    particle.className = 'absolute w-2 h-2 rounded-full';
+    particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+    particle.style.left = '50%';
+    particle.style.top = '50%';
+    particle.style.boxShadow = `0 0 10px ${particle.style.background}`;
+    
+    const angle = (Math.PI * 2 * i) / 30;
+    const velocity = 100 + Math.random() * 150;
+    const tx = Math.cos(angle) * velocity;
+    const ty = Math.sin(angle) * velocity;
+    
+    particle.animate([
+      { transform: 'translate(-50%, -50%) scale(1)', opacity: 1 },
+      { transform: `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) scale(0)`, opacity: 0 }
+    ], {
+      duration: 1000 + Math.random() * 500,
+      easing: 'cubic-bezier(0, 0.5, 0.5, 1)'
+    });
+    
+    container.appendChild(particle);
+  }
+  
+  setTimeout(() => { container.innerHTML = ''; }, 2000);
 }
 
 /**

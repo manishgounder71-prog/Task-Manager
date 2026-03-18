@@ -475,11 +475,103 @@
           </div>
         </div>
 
-        <!-- Feature 2: Progress Pie -->
+        <!-- Feature 2: Progress Pie - Redesigned -->
         <div class="bg-white dark:bg-zinc-900/50 rounded-[2.5rem] p-10 bento-card border border-slate-200 dark:border-white/5 shadow-xl transition-colors flex flex-col justify-between group min-h-[400px]" onmousemove="handleBentoHover(event,this)">
           <div>
             <h3 class="text-2xl font-bold mb-3 text-slate-900 dark:text-white">Daily Progress</h3>
             <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">Your real-time completion status for today.</p>
+          </div>
+          <div class="mt-4 flex flex-col items-center justify-center relative h-72 group/pie chart-3d-wrapper">
+             <!-- Particle Layer -->
+             <div id="pieParticles" class="absolute inset-0 pointer-events-none overflow-hidden rounded-[2rem] z-0"></div>
+             
+             <!-- Glow Ring Behind -->
+             <div id="pieGlow" class="absolute inset-0 rounded-full bg-gradient-to-r from-indigo-500/20 via-purple-500/20 to-indigo-500/20 blur-3xl animate-pulse-slow opacity-0 transition-opacity duration-700"></div>
+             
+              <div class="pie-3d-container w-full h-full flex items-center justify-center relative z-10 transition-transform duration-300 ease-out">
+                <svg class="w-72 h-72 overflow-visible drop-shadow-2xl" viewBox="0 0 280 280">
+                  <defs>
+                    <!-- Main Progress Gradient -->
+                    <linearGradient id="pieGradientMain" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#818cf8" />
+                      <stop offset="50%" stop-color="#6366f1" />
+                      <stop offset="100%" stop-color="#4f46e5" />
+                    </linearGradient>
+                    
+                    <!-- Success Gradient -->
+                    <linearGradient id="pieGradientSuccess" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#34d399" />
+                      <stop offset="100%" stop-color="#10b981" />
+                    </linearGradient>
+                    
+                    <!-- Edge Gradient -->
+                    <linearGradient id="pieGradientEdge" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stop-color="#312e81" />
+                      <stop offset="100%" stop-color="#1e1b4b" />
+                    </linearGradient>
+                    
+                    <!-- Shadow Filter -->
+                    <filter id="pieShadow" x="-50%" y="-50%" width="200%" height="200%">
+                      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#4f46e5" flood-opacity="0.3"/>
+                    </filter>
+                    
+                    <!-- Inner Glow -->
+                    <filter id="innerGlow" x="-50%" y="-50%" width="200%" height="200%">
+                      <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur"/>
+                      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                    </filter>
+                    
+                    <!-- 3D Depth Gradient -->
+                    <linearGradient id="depthGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stop-color="#000" stop-opacity="0.3"/>
+                      <stop offset="100%" stop-color="#000" stop-opacity="0"/>
+                    </linearGradient>
+                  </defs>
+                  
+                  <!-- Base Circle (Background) -->
+                  <circle cx="140" cy="140" r="110" fill="url(#depthGradient)" opacity="0.5"/>
+                  
+                  <!-- Bottom Edge/Thickness -->
+                  <g class="pie-edge" style="transform: translateY(8px)">
+                     <!-- Dark edge background -->
+                     <circle cx="140" cy="140" r="108" stroke="#1e1b4b" stroke-width="28" fill="transparent"/>
+                     <!-- Actual edge progress -->
+                     <circle id="progressPie3DEdge" cx="140" cy="140" r="108" stroke="rgba(0,0,0,0.5)" stroke-width="28" fill="transparent" 
+                             stroke-dasharray="678.58" stroke-dashoffset="678.58"
+                             class="transition-all duration-1000 ease-out" stroke-linecap="round"/>
+                  </g>
+                  
+                  <!-- Main Face -->
+                  <g class="pie-face filter" style="filter: url(#pieShadow)">
+                     <!-- Remaining (background) -->
+                     <circle id="progressPie3DRemaining" cx="140" cy="140" r="108" stroke="rgba(0,0,0,0.08)" stroke-width="28" fill="transparent" 
+                             stroke-dasharray="678.58" stroke-dashoffset="0"
+                             class="transition-all duration-700 ease-out" stroke-linecap="butt"/>
+                     
+                     <!-- Completed Progress -->
+                     <circle id="progressPie3D" cx="140" cy="140" r="108" stroke="url(#pieGradientMain)" stroke-width="28" fill="transparent" 
+                             stroke-dasharray="678.58" stroke-dashoffset="678.58"
+                             class="transition-all duration-1000 cubic-bezier(0.34, 1.56, 0.64, 1)" stroke-linecap="round"/>
+                     
+                     <!-- Highlight on top edge -->
+                     <circle cx="140" cy="140" r="108" stroke="rgba(255,255,255,0.15)" stroke-width="2" fill="transparent" 
+                             stroke-dasharray="678.58" stroke-dashoffset="0" stroke-linecap="round" class="opacity-50"/>
+                  </g>
+                  
+                  <!-- Animated Rings -->
+                  <circle id="progressRing1" cx="140" cy="140" r="120" fill="none" stroke="url(#pieGradientMain)" stroke-width="1" opacity="0" class="transition-all duration-1000"/>
+                  <circle id="progressRing2" cx="140" cy="140" r="130" fill="none" stroke="url(#pieGradientMain)" stroke-width="0.5" opacity="0" class="transition-all duration-1000"/>
+                </svg>
+              </div>
+
+              <!-- Floating stats in center -->
+              <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center pointer-events-none z-20 w-full">
+                 <span id="progressPiePercent" class="text-7xl lg:text-8xl font-black text-slate-900 dark:text-white percent-glow leading-none tracking-tighter drop-shadow-lg">0%</span>
+                 <span id="progressPieStats" class="text-xs text-indigo-600 dark:text-indigo-400 uppercase tracking-[0.3em] font-bold mt-2 opacity-90">0/0 Tasks</span>
+              </div>
+              
+              <!-- Celebration particles container -->
+              <div id="celebrationParticles" class="absolute inset-0 pointer-events-none overflow-hidden z-30"></div>
           </div>
           <div class="mt-8 flex flex-col items-center justify-center relative h-80 group/pie chart-3d-wrapper">
              <!-- New Particle Layer -->

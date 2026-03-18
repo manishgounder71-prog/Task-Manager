@@ -1259,9 +1259,15 @@ document.addEventListener('DOMContentLoaded', () => {
     startRealTimePolling();
   }
 
-  // Theme toggle initialization (Initial state handled in head)
+  // Theme toggle initialization
   const themeToggleBtn = document.getElementById('themeToggle');
   const htmlEl = document.documentElement;
+
+  if (localStorage.getItem('theme') === 'light') {
+    htmlEl.classList.remove('dark');
+  } else {
+    htmlEl.classList.add('dark');
+  }
 
   if (themeToggleBtn) {
     themeToggleBtn.addEventListener('click', () => {

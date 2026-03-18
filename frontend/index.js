@@ -404,57 +404,207 @@ function createCelebrationParticles() {
  * Generates and updates a dynamic progress trend sparkline
  */
 let progressHistory = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; // Keep track of the last 10 'states'
+let lastSparklineValue = 0;
+
 function renderProgressLineGraph(currentPct) {
   const path = document.getElementById('sparklinePath');
   const fill = document.getElementById('sparklineFill');
+  const glowPath = document.getElementById('sparklineGlowPath');
+  const dots = document.getElementById('sparklineDots');
   const trend = document.getElementById('trendDirection');
+  const trendIcon = document.getElementById('trendIcon');
+  const trendPercent = document.getElementById('trendPercent');
+  const sparklineGlow = document.getElementById('sparklineGlow');
+  const sparklineBgPulse = document.getElementById('sparklineBgPulse');
+  const sparklineMin = document.getElementById('sparklineMin');
+  const sparklineAvg = document.getElementById('sparklineAvg');
+  const sparklineMax = document.getElementById('sparklineMax');
+  
   if (!path || !fill) return;
 
   // Add current state to history if it has changed
   if (progressHistory[progressHistory.length - 1] !== currentPct) {
     progressHistory.push(currentPct);
     if (progressHistory.length > 12) progressHistory.shift();
+    lastSparklineValue = currentPct;
+    
+    // Trigger background pulse animation
+    if (sparklineBgPulse) {
+      sparklineBgPulse.style.opacity = '1';
+      setTimeout(() => {
+        if (sparklineBgPulse) sparklineBgPulse.style.opacity = '0';
+      }, 500);
+    }
+    
+    // Create floating particles
+    createSparklineParticle();
   }
 
   const width = 200; // Relative SVG width
-  const height = 96; // Relative SVG height (was 48)
+  const height = 112; // Relative SVG height
   const step = width / (progressHistory.length - 1);
+  const padding = 8; // Top padding for labels
   
-  let d = `M 0 ${height - (progressHistory[0] / 100) * height}`;
-  let fillD = `M 0 ${height} L 0 ${height - (progressHistory[0] / 100) * height}`;
-
-  for (let i = 1; i < progressHistory.length; i++) {
-    const x = i * step;
-    const y = height - (progressHistory[i] / 100) * height;
-    d += ` L ${x} ${y}`;
-    fillD += ` L ${x} ${y}`;
+  // Calculate points with smooth curves
+  let points = progressHistory.map((val, i) => ({
+    x: i * step,
+    y: height - padding - (val / 100) * (height - padding * 2)
+  }));
+  
+  // Create smooth bezier curve
+  let d = `M ${points[0].x} ${points[0].y}`;
+  
+  for (let i = 1; i < points.length; i++) {
+    const prev = points[i - 1];
+    const curr = points[i];
+    const cp1x = prev.x + (curr.x - prev.x) / 3;
+    const cp2x = prev.x + 2 * (curr.x - prev.x) / 3;
+    d += ` C ${cp1x} ${prev.y}, ${cp2x} ${curr.y}, ${curr.x} ${curr.y}`;
   }
 
-  fillD += ` L ${width} ${height} Z`;
+  // Create fill path (with smooth curves)
+  let fillD = `M ${points[0].x} ${height}`;
+  fillD += ` L ${points[0].x} ${points[0].y}`;
+  for (let i = 1; i < points.length; i++) {
+    const prev = points[i - 1];
+    const curr = points[i];
+    const cp1x = prev.x + (curr.x - prev.x) / 3;
+    const cp2x = prev.x + 2 * (curr.x - prev.x) / 3;
+    fillD += ` C ${cp1x} ${prev.y}, ${cp2x} ${curr.y}, ${curr.x} ${curr.y}`;
+  }
+  fillD += ` L ${points[points.length - 1].x} ${height} Z`;
 
+  // Update paths
   path.setAttribute('d', d);
-  fill.setAttribute('d', d + ` L ${width},${height} L 0,${height} Z`);
+  fill.setAttribute('d', fillD);
+  if (glowPath) {
+    glowPath.setAttribute('d', d);
+    glowPath.style.opacity = '0.3';
+  }
 
-  // Animate the drawing
-  path.style.strokeDasharray = '280';
-  path.style.strokeDashoffset = '280';
-  path.style.animation = 'path-draw 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards';
+  // Animate the drawing with path animation
+  const pathLength = path.getTotalLength ? path.getTotalLength() : 300;
+  path.style.strokeDasharray = pathLength;
+  path.style.strokeDashoffset = pathLength;
+  path.animate([
+    { strokeDashoffset: pathLength },
+    { strokeDashoffset: 0 }
+  ], {
+    duration: 1000,
+    easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+    fill: 'forwards'
+  });
+
+  // Update glow path animation
+  if (glowPath) {
+    glowPath.animate([
+      { opacity: 0 },
+      { opacity: 0.3 }
+    ], {
+      duration: 1000,
+      easing: 'ease-out',
+      fill: 'forwards'
+    });
+  }
+
+  // Add animated dots at data points
+  if (dots) {
+    dots.innerHTML = '';
+    points.forEach((point, i) => {
+      const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      circle.setAttribute('cx', point.x);
+      circle.setAttribute('cy', point.y);
+      circle.setAttribute('r', '4');
+      circle.setAttribute('fill', '#818cf8');
+      circle.setAttribute('stroke', isDarkMode() ? '#1e1b4b' : '#ffffff');
+      circle.setAttribute('stroke-width', '2');
+      circle.style.filter = 'drop-shadow(0 0 4px rgba(129, 140, 248, 0.6))';
+      
+      // Animate dot entrance
+      circle.animate([
+        { transform: 'scale(0)', opacity: 0 },
+        { transform: 'scale(1.2)', opacity: 1, offset: 0.7 },
+        { transform: 'scale(1)', opacity: 1 }
+      ], {
+        duration: 400,
+        delay: 100 + i * 50,
+        easing: 'ease-out',
+        fill: 'forwards'
+      });
+      
+      dots.appendChild(circle);
+    });
+  }
+
+  // Update glow effect
+  if (sparklineGlow) {
+    sparklineGlow.style.opacity = currentPct > 0 ? '1' : '0';
+  }
 
   // Update trend text
-  if (trend) {
+  if (trend && trendIcon && trendPercent) {
     const last = progressHistory[progressHistory.length - 1];
     const prev = progressHistory[progressHistory.length - 2] || 0;
-    if (last > prev) {
-      trend.textContent = 'Increasing';
-      trend.className = 'text-[10px] text-emerald-400 font-mono';
-    } else if (last < prev) {
-      trend.textContent = 'Decreasing';
-      trend.className = 'text-[10px] text-rose-400 font-mono';
+    const diff = last - prev;
+    
+    if (diff > 0) {
+      trend.textContent = 'Up';
+      trend.className = 'text-xs text-emerald-400 font-mono font-bold';
+      trendIcon.textContent = '📈';
+      trendPercent.textContent = `+${diff}%`;
+      trendPercent.className = 'text-xs font-bold text-emerald-500';
+    } else if (diff < 0) {
+      trend.textContent = 'Down';
+      trend.className = 'text-xs text-rose-400 font-mono font-bold';
+      trendIcon.textContent = '📉';
+      trendPercent.textContent = `${diff}%`;
+      trendPercent.className = 'text-xs font-bold text-rose-500';
     } else {
       trend.textContent = 'Stable';
-      trend.className = 'text-[10px] text-slate-500 font-mono';
+      trend.className = 'text-xs text-slate-500 font-mono font-bold';
+      trendIcon.textContent = '➡️';
+      trendPercent.textContent = '0%';
+      trendPercent.className = 'text-xs font-bold text-slate-500';
     }
   }
+
+  // Update stats
+  if (sparklineMin && sparklineAvg && sparklineMax) {
+    const min = Math.min(...progressHistory);
+    const max = Math.max(...progressHistory);
+    const avg = Math.round(progressHistory.reduce((a, b) => a + b, 0) / progressHistory.length);
+    
+    sparklineMin.textContent = `${min}%`;
+    sparklineAvg.textContent = `${avg}%`;
+    sparklineMax.textContent = `${max}%`;
+  }
+}
+
+/**
+ * Creates floating particle for sparkline
+ */
+function createSparklineParticle() {
+  const container = document.getElementById('sparklineParticles');
+  if (!container) return;
+  
+  const particle = document.createElement('div');
+  particle.className = 'absolute w-1.5 h-1.5 rounded-full bg-indigo-400/60';
+  particle.style.left = `${Math.random() * 100}%`;
+  particle.style.top = `${50 + Math.random() * 30}%`;
+  particle.style.boxShadow = '0 0 6px rgba(129, 140, 248, 0.8)';
+  
+  container.appendChild(particle);
+  
+  particle.animate([
+    { transform: 'translateY(0) scale(1)', opacity: 0.8 },
+    { transform: `translateY(-${30 + Math.random() * 20}px) scale(0)`, opacity: 0 }
+  ], {
+    duration: 800 + Math.random() * 400,
+    easing: 'ease-out',
+    fill: 'forwards'
+  });
+  
+  setTimeout(() => particle.remove(), 1500);
 }
 
 /**

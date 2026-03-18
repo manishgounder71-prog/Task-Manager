@@ -13,6 +13,7 @@ const dbFilePath = path.join(__dirname, 'tasks.db');
 
 async function initDB() {
   if (dbInitialized) return;
+  console.log('📦 Database System Revision: 2026-03-18-v3 (Auto-Fallback Enabled)');
 
   if (process.env.DATABASE_URL) {
     dbType = 'postgres';

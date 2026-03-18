@@ -846,29 +846,73 @@ async function loadGraph() {
     // Bar chart stats (30-day)
     const total30 = monthHistory.reduce((s, d) => s + d.total, 0);
     const done30  = monthHistory.reduce((s, d) => s + d.completed, 0);
+    const pending30 = total30 - done30;
     const rate30  = total30 > 0 ? Math.round((done30 / total30) * 100) : 0;
+    
+    // Update all stat elements
     setEl('statTotal', total30);
     setEl('statDone',  done30);
     setEl('statRate',  `${rate30}%`);
+    setEl('statPending', pending30);
+    setEl('completionCount', done30);
+    setEl('completionTotal', total30);
+    setEl('completionRateDisplay', `${rate30}%`);
+    
+    // Update mini progress bars in stat cards
+    updateStatBar('statTotalBar', 100);
+    updateStatBar('statDoneBar', rate30);
+    updateStatBar('statPendingBar', total30 > 0 ? Math.round((pending30 / total30) * 100) : 0);
+    updateStatBar('statRateBar', rate30);
     
     // Update real-time progress bar
-    updateCompletionProgress(rate30);
+    updateCompletionProgress(rate30, done30, total30);
+    
+    // Update last update time
+    updateLastUpdateTime();
   } catch (e) { console.error('loadGraph error', e); }
+}
+
+/**
+ * Updates a mini progress bar in stat cards
+ */
+function updateStatBar(id, percentage) {
+  const bar = document.getElementById(id);
+  if (bar) {
+    bar.style.width = `${percentage}%`;
+  }
+}
+
+/**
+ * Updates the last update time display
+ */
+function updateLastUpdateTime() {
+  const timeEl = document.getElementById('lastUpdateTime');
+  if (timeEl) {
+    timeEl.textContent = 'Just now';
+    timeEl.classList.add('text-emerald-500');
+    timeEl.classList.remove('text-slate-400');
+  }
 }
 
 /**
  * Updates the real-time completion progress bar with animations
  */
-function updateCompletionProgress(rate) {
+function updateCompletionProgress(rate, completed, total) {
   const progressBar = document.getElementById('completionProgressBar');
   const progressGlow = document.getElementById('completionProgressGlow');
   const rateDisplay = document.getElementById('completionRateDisplay');
+  const progressText = document.getElementById('completionProgressText');
   const bgPulse = document.getElementById('completionBgPulse');
   
   if (!progressBar) return;
   
   // Animate the progress bar
   progressBar.style.width = `${rate}%`;
+  
+  // Update progress text
+  if (progressText) {
+    progressText.textContent = `${rate}%`;
+  }
   
   // Add glow effect based on progress
   if (progressGlow) {
@@ -884,22 +928,51 @@ function updateCompletionProgress(rate) {
     }, 500);
   }
   
+  // Create floating particles on update
+  createCompletionParticle();
+  
   // Animate the rate counter
   if (rateDisplay) {
     animateCounter(rateDisplay, rate, '%');
   }
   
   // Color change based on rate
+  progressBar.classList.remove('from-emerald-500', 'to-emerald-400', 'from-amber-500', 'to-amber-400', 'from-indigo-500', 'via-purple-500', 'to-indigo-500');
+  
   if (rate >= 80) {
     progressBar.classList.add('bg-gradient-to-r', 'from-emerald-500', 'to-emerald-400');
-    progressBar.classList.remove('from-indigo-500', 'via-purple-500', 'to-indigo-500');
   } else if (rate >= 50) {
     progressBar.classList.add('bg-gradient-to-r', 'from-amber-500', 'to-amber-400');
-    progressBar.classList.remove('from-emerald-500', 'to-emerald-400', 'from-indigo-500', 'via-purple-500', 'to-indigo-500');
   } else {
     progressBar.classList.add('bg-gradient-to-r', 'from-indigo-500', 'via-purple-500', 'to-indigo-500');
-    progressBar.classList.remove('from-emerald-500', 'to-emerald-400', 'from-amber-500', 'to-amber-400');
   }
+}
+
+/**
+ * Creates a floating particle effect
+ */
+function createCompletionParticle() {
+  const container = document.getElementById('completionParticles');
+  if (!container) return;
+  
+  const particle = document.createElement('div');
+  particle.className = 'absolute w-2 h-2 rounded-full bg-indigo-400/60';
+  particle.style.left = `${Math.random() * 100}%`;
+  particle.style.top = `${Math.random() * 100}%`;
+  particle.style.boxShadow = '0 0 10px rgba(129, 140, 248, 0.8)';
+  
+  container.appendChild(particle);
+  
+  particle.animate([
+    { transform: 'translateY(0) scale(1)', opacity: 0.8 },
+    { transform: `translateY(-${50 + Math.random() * 50}px) scale(0)`, opacity: 0 }
+  ], {
+    duration: 1000 + Math.random() * 500,
+    easing: 'ease-out',
+    fill: 'forwards'
+  });
+  
+  setTimeout(() => particle.remove(), 2000);
 }
 
 /**
@@ -1151,6 +1224,40 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initial load
   loadTasks();
   initParticles();
+  
+  // Real-time data polling - update every 5 seconds
+  let refreshInterval;
+  function startRealTimePolling() {
+    // Refresh graph data every 10 seconds for real-time updates
+    refreshInterval = setInterval(() => {
+      if (graphLoaded) {
+        loadGraph();
+      }
+      // Also refresh stats periodically
+      refreshStats();
+    }, 10000);
+  }
+  
+  // Start polling after graph is loaded
+  const graphSection = document.getElementById('daily-record');
+  if (graphSection) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          graphLoaded = true;
+          loadGraph();
+          startRealTimePolling();
+          observer.disconnect();
+        }
+      });
+    }, { threshold: 0.05 });
+    observer.observe(graphSection);
+  }
+  
+  // Also start polling if already visible
+  if (graphLoaded) {
+    startRealTimePolling();
+  }
 
   // Theme toggle initialization
   const themeToggleBtn = document.getElementById('themeToggle');

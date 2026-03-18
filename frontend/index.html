@@ -785,68 +785,143 @@
 
       </div>
 
-      <!-- ─── Bottom row: Task Completion (Expanded) ─── -->
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- ─── Task Completion: Full Width Real-time Dashboard ─── -->
+      <div class="grid grid-cols-1 gap-8">
 
-        <!-- Task Completion: Enhanced Real-time Progress -->
-        <div class="bg-gradient-to-br from-white via-indigo-50/30 to-white dark:from-zinc-900/80 dark:via-indigo-950/20 dark:to-zinc-900/60 border border-slate-200 dark:border-white/10 transition-colors rounded-[2.5rem] p-8 bento-card shadow-xl relative overflow-hidden lg:col-span-2" onmousemove="handleBentoHover(event,this)">
+        <!-- Task Completion: Full Width Real-time Progress -->
+        <div class="bg-gradient-to-br from-white via-indigo-50/50 to-purple-50/30 dark:from-zinc-900/90 dark:via-indigo-950/30 dark:to-zinc-900/70 border border-slate-200 dark:border-white/15 transition-colors rounded-[2.5rem] p-10 bento-card shadow-2xl relative overflow-hidden" onmousemove="handleBentoHover(event,this)">
           <!-- Animated background -->
           <div class="absolute inset-0 bg-gradient-to-r from-indigo-500/5 via-purple-500/5 to-indigo-500/5 opacity-0 transition-opacity duration-1000" id="completionBgPulse"></div>
           
+          <!-- Floating particles -->
+          <div id="completionParticles" class="absolute inset-0 pointer-events-none overflow-hidden"></div>
+          
           <div class="relative z-10">
-            <div class="flex justify-between items-start mb-6">
+            <!-- Header with real-time indicators -->
+            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-8">
               <div>
-                <div class="flex items-center gap-2 mb-1">
-                  <h3 class="text-slate-900 dark:text-white font-bold text-xl">Task Completion</h3>
-                  <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
+                <div class="flex items-center gap-3 mb-2">
+                  <div class="relative">
+                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white">Task Completion</h3>
+                    <span class="absolute -top-1 -right-6 w-2.5 h-2.5 bg-emerald-500 rounded-full animate-ping"></span>
+                    <span class="absolute -top-1 -right-6 w-2.5 h-2.5 bg-emerald-500 rounded-full"></span>
+                  </div>
+                  <span class="px-3 py-1 bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 text-xs font-bold rounded-full">LIVE</span>
                 </div>
-                <p class="text-slate-500 text-sm">Last 30 days • Real-time</p>
+                <div class="flex items-center gap-4">
+                  <p class="text-slate-500 text-sm">Last 30 days • Updated in real-time</p>
+                  <div class="flex items-center gap-1.5 text-xs text-slate-400" id="lastUpdated">
+                    <span class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-pulse"></span>
+                    <span id="lastUpdateTime">Just now</span>
+                  </div>
+                </div>
               </div>
               
-              <!-- Real-time Rate Display -->
-              <div class="text-right">
-                <div class="text-3xl font-black text-indigo-600 dark:text-indigo-400" id="completionRateDisplay">0%</div>
-                <div class="text-[10px] text-slate-500 uppercase tracking-widest font-semibold">Completion Rate</div>
-              </div>
-            </div>
-            
-            <!-- Animated Progress Bar -->
-            <div class="relative h-4 bg-slate-100 dark:bg-white/10 rounded-full overflow-hidden mb-6 shadow-inner">
-              <div id="completionProgressBar" class="absolute inset-y-0 left-0 bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500 rounded-full transition-all duration-1000 ease-out" style="width: 0%"></div>
-              <div id="completionProgressGlow" class="absolute inset-0 bg-gradient-to-r from-indigo-400 via-purple-400 to-indigo-400 rounded-full opacity-0 transition-opacity duration-700 blur-sm"></div>
-              <!-- Animated shine effect -->
-              <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full animate-shine"></div>
-            </div>
-            
-            <!-- Bar Chart -->
-            <div id="barChart" class="w-full overflow-x-auto -mx-2">
-              <svg id="barChartSvg" width="100%" height="180" class="min-w-[400px]"></svg>
-            </div>
-            <div id="barLabels" class="flex justify-between mt-2 min-w-[400px] px-2"></div>
-            
-            <!-- Enhanced Stats row -->
-            <div class="mt-6 grid grid-cols-3 gap-4">
-              <div class="bg-gradient-to-br from-slate-50 to-white dark:from-white/10 dark:to-white/5 border border-slate-200 dark:border-white/10 rounded-2xl p-4 text-center relative overflow-hidden group">
-                <div class="absolute inset-0 bg-indigo-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                <div class="relative">
-                  <div id="statTotal" class="text-2xl font-bold text-slate-900 dark:text-white">0</div>
-                  <div class="text-[10px] text-slate-500 mt-1 uppercase tracking-wider font-semibold">Total Tasks</div>
+              <!-- Real-time Big Rate Display -->
+              <div class="flex items-center gap-6 bg-slate-50 dark:bg-white/5 rounded-2xl px-6 py-4 border border-slate-200 dark:border-white/10">
+                <div class="text-center">
+                  <div class="text-5xl font-black text-indigo-600 dark:text-indigo-400 transition-all duration-500" id="completionRateDisplay">0%</div>
+                  <div class="text-[10px] text-slate-500 uppercase tracking-widest font-semibold mt-1">Success Rate</div>
+                </div>
+                <div class="w-px h-12 bg-slate-200 dark:bg-white/10"></div>
+                <div class="text-center">
+                  <div class="text-3xl font-bold text-slate-900 dark:text-white" id="completionCount">0</div>
+                  <div class="text-[10px] text-slate-500 uppercase tracking-widest font-semibold mt-1">Completed</div>
+                </div>
+                <div class="w-px h-12 bg-slate-200 dark:bg-white/10"></div>
+                <div class="text-center">
+                  <div class="text-3xl font-bold text-slate-900 dark:text-white" id="completionTotal">0</div>
+                  <div class="text-[10px] text-slate-500 uppercase tracking-widest font-semibold mt-1">Total Tasks</div>
                 </div>
               </div>
-              <div class="bg-gradient-to-br from-emerald-50 to-white dark:from-emerald-500/10 dark:to-white/5 border border-emerald-200 dark:border-emerald-500/20 rounded-2xl p-4 text-center relative overflow-hidden group">
+            </div>
+            
+            <!-- Large Animated Progress Bar -->
+            <div class="relative h-6 bg-slate-100 dark:bg-white/10 rounded-full overflow-hidden mb-8 shadow-inner">
+              <div id="completionProgressBar" class="absolute inset-y-0 left-0 bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500 rounded-full transition-all duration-1000 ease-out" style="width: 0%"></div>
+              <div id="completionProgressGlow" class="absolute inset-0 bg-gradient-to-r from-indigo-400 via-purple-400 to-indigo-400 rounded-full opacity-0 transition-opacity duration-700 blur-md"></div>
+              <!-- Animated shine effect -->
+              <div class="absolute inset-0 overflow-hidden rounded-full">
+                <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full animate-shine"></div>
+              </div>
+              <!-- Progress percentage text overlay -->
+              <div class="absolute inset-0 flex items-center justify-center">
+                <span id="completionProgressText" class="text-xs font-bold text-white drop-shadow-lg transition-opacity duration-300">0%</span>
+              </div>
+            </div>
+            
+            <!-- Stats Cards Row -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+              <div class="bg-gradient-to-br from-slate-50 to-white dark:from-white/10 dark:to-white/5 border border-slate-200 dark:border-white/10 rounded-2xl p-5 text-center relative overflow-hidden group hover:shadow-lg transition-all cursor-pointer">
+                <div class="absolute inset-0 bg-indigo-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div class="relative">
+                  <div class="w-10 h-10 bg-indigo-100 dark:bg-indigo-500/20 rounded-xl flex items-center justify-center mx-auto mb-3">
+                    <svg class="w-5 h-5 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                  </div>
+                  <div id="statTotal" class="text-3xl font-black text-slate-900 dark:text-white transition-all duration-300">0</div>
+                  <div class="text-[10px] text-slate-500 mt-1 uppercase tracking-wider font-semibold">Total Tasks</div>
+                  <div class="mt-2 h-1.5 bg-slate-100 dark:bg-white/10 rounded-full overflow-hidden">
+                    <div id="statTotalBar" class="h-full bg-indigo-500 rounded-full transition-all duration-500" style="width: 0%"></div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="bg-gradient-to-br from-emerald-50 to-white dark:from-emerald-500/10 dark:to-white/5 border border-emerald-200 dark:border-emerald-500/20 rounded-2xl p-5 text-center relative overflow-hidden group hover:shadow-lg transition-all cursor-pointer">
                 <div class="absolute inset-0 bg-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 <div class="relative">
-                  <div id="statDone" class="text-2xl font-bold text-emerald-600 dark:text-emerald-400">0</div>
+                  <div class="w-10 h-10 bg-emerald-100 dark:bg-emerald-500/20 rounded-xl flex items-center justify-center mx-auto mb-3">
+                    <svg class="w-5 h-5 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                  </div>
+                  <div id="statDone" class="text-3xl font-black text-emerald-600 dark:text-emerald-400 transition-all duration-300">0</div>
                   <div class="text-[10px] text-emerald-600 dark:text-emerald-400 mt-1 uppercase tracking-wider font-semibold">Completed</div>
+                  <div class="mt-2 h-1.5 bg-emerald-100 dark:bg-emerald-500/20 rounded-full overflow-hidden">
+                    <div id="statDoneBar" class="h-full bg-emerald-500 rounded-full transition-all duration-500" style="width: 0%"></div>
+                  </div>
                 </div>
               </div>
-              <div class="bg-gradient-to-br from-indigo-50 to-white dark:from-indigo-500/10 dark:to-white/5 border border-indigo-200 dark:border-indigo-500/20 rounded-2xl p-4 text-center relative overflow-hidden group">
+              
+              <div class="bg-gradient-to-br from-amber-50 to-white dark:from-amber-500/10 dark:to-white/5 border border-amber-200 dark:border-amber-500/20 rounded-2xl p-5 text-center relative overflow-hidden group hover:shadow-lg transition-all cursor-pointer">
+                <div class="absolute inset-0 bg-amber-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div class="relative">
+                  <div class="w-10 h-10 bg-amber-100 dark:bg-amber-500/20 rounded-xl flex items-center justify-center mx-auto mb-3">
+                    <svg class="w-5 h-5 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                  </div>
+                  <div id="statPending" class="text-3xl font-black text-amber-600 dark:text-amber-400 transition-all duration-300">0</div>
+                  <div class="text-[10px] text-amber-600 dark:text-amber-400 mt-1 uppercase tracking-wider font-semibold">Pending</div>
+                  <div class="mt-2 h-1.5 bg-amber-100 dark:bg-amber-500/20 rounded-full overflow-hidden">
+                    <div id="statPendingBar" class="h-full bg-amber-500 rounded-full transition-all duration-500" style="width: 0%"></div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="bg-gradient-to-br from-indigo-50 to-white dark:from-indigo-500/10 dark:to-white/5 border border-indigo-200 dark:border-indigo-500/20 rounded-2xl p-5 text-center relative overflow-hidden group hover:shadow-lg transition-all cursor-pointer">
                 <div class="absolute inset-0 bg-indigo-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 <div class="relative">
-                  <div id="statRate" class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">0%</div>
+                  <div class="w-10 h-10 bg-indigo-100 dark:bg-indigo-500/20 rounded-xl flex items-center justify-center mx-auto mb-3">
+                    <svg class="w-5 h-5 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                  </div>
+                  <div id="statRate" class="text-3xl font-black text-indigo-600 dark:text-indigo-400 transition-all duration-300">0%</div>
                   <div class="text-[10px] text-indigo-600 dark:text-indigo-400 mt-1 uppercase tracking-wider font-semibold">Success Rate</div>
+                  <div class="mt-2 h-1.5 bg-indigo-100 dark:bg-indigo-500/20 rounded-full overflow-hidden">
+                    <div id="statRateBar" class="h-full bg-indigo-500 rounded-full transition-all duration-500" style="width: 0%"></div>
+                  </div>
                 </div>
               </div>
+            </div>
+            
+            <!-- Bar Chart with enhanced styling -->
+            <div class="bg-slate-50/50 dark:bg-white/5 rounded-2xl p-4 mb-6">
+              <div class="flex items-center justify-between mb-4">
+                <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">Daily Progress (Last 30 Days)</span>
+                <div class="flex items-center gap-4 text-xs">
+                  <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-indigo-500"></span><span class="text-slate-500">Done</span></span>
+                  <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-slate-200 dark:bg-white/20"></span><span class="text-slate-500">Total</span></span>
+                </div>
+              </div>
+              <div id="barChart" class="w-full overflow-x-auto">
+                <svg id="barChartSvg" width="100%" height="200" class="min-w-[500px]"></svg>
+              </div>
+              <div id="barLabels" class="flex justify-between mt-3 min-w-[500px] px-2"></div>
             </div>
           </div>
         </div>

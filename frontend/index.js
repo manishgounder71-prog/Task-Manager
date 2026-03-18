@@ -732,7 +732,9 @@ async function handleToggleDone(id, isDone, itemEl) {
     showToast(updated.is_done ? 'Task marked complete!' : 'Task marked incomplete');
     updateProgress();
     await refreshStats();
-    if (graphLoaded) loadGraph();
+    if (graphLoaded) {
+      setTimeout(() => loadGraph(), 100); // Small delay to ensure backend saves first
+    }
   } catch (e) {
     showToast(e.message, 'error');
   }
@@ -756,7 +758,9 @@ async function handleDelete(id, itemEl) {
     if (allTasks.length === 0) document.getElementById('emptyState').style.display = 'block';
     showToast('Task deleted');
     await refreshStats();
-    if (graphLoaded) loadGraph();
+    if (graphLoaded) {
+      setTimeout(() => loadGraph(), 100);
+    }
   } catch (e) {
     showToast(e.message, 'error');
     itemEl.style.opacity = '';

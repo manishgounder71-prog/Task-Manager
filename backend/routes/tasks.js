@@ -293,7 +293,7 @@ router.post('/ai/suggest', async (req, res) => {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "qwen/qwen2.5-72b-instruct",
+        model: "qwen/qwen3.5-122b-a10b",
         messages: [{ role: "user", content: prompt }],
         max_tokens: 100,
         temperature: 0.7
@@ -351,7 +351,7 @@ Please provide a concise, helpful response (under 50 words) based on their tasks
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "qwen/qwen2.5-72b-instruct",
+        model: "qwen/qwen3.5-122b-a10b",
         messages: [{ role: "user", content: prompt }],
         max_tokens: 150,
         temperature: 0.7

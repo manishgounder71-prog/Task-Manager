@@ -573,59 +573,6 @@
               <!-- Celebration particles container -->
               <div id="celebrationParticles" class="absolute inset-0 pointer-events-none overflow-hidden z-30"></div>
           </div>
-          <div class="mt-8 flex flex-col items-center justify-center relative h-80 group/pie chart-3d-wrapper">
-             <!-- New Particle Layer -->
-             <div id="pieParticles" class="absolute inset-0 pointer-events-none overflow-hidden rounded-[2rem] z-0"></div>
-             
-             <div class="pie-3d-container w-full h-full flex items-center justify-center relative z-10 transition-transform duration-200 ease-out">
-               <svg class="w-64 h-64 overflow-visible">
-                 <defs>
-                   <linearGradient id="pieGradientMain" x1="0%" y1="0%" x2="100%" y2="100%">
-                     <stop offset="0%" stop-color="#818cf8" />
-                     <stop offset="100%" stop-color="#4f46e5" />
-                   </linearGradient>
-                   <linearGradient id="pieGradientEdge" x1="0%" y1="0%" x2="0%" y2="100%">
-                     <stop offset="0%" stop-color="#312e81" />
-                     <stop offset="100%" stop-color="#1e1b4b" />
-                   </linearGradient>
-                   <filter id="bevelFilter">
-                     <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur" />
-                     <feSpecularLighting in="blur" surfaceScale="5" specularConstant="0.75" specularExponent="20" lighting-color="#ffffff" result="specOut">
-                       <fePointLight x="-5000" y="-10000" z="20000" />
-                     </feSpecularLighting>
-                     <feComposite in="specOut" in2="SourceAlpha" operator="in" result="specOut" />
-                     <feComposite in="SourceGraphic" in2="specOut" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" result="litGraphic" />
-                   </filter>
-                 </defs>
-                 
-                 <!-- The 'Thickness' / Edge for 3D effect -->
-                 <g class="pie-edge translate-y-4">
-                    <circle cx="128" cy="128" r="115" stroke="#1e1b4b" stroke-width="24" fill="transparent" />
-                    <circle id="progressPie3DEdge" cx="128" cy="128" r="115" stroke="rgba(0,0,0,0.4)" stroke-width="24" fill="transparent" 
-                            stroke-dasharray="722" stroke-dashoffset="722"
-                            class="transition-all duration-1000 ease-in-out" stroke-linecap="round" />
-                 </g>
-                 
-                 <!-- Main Face -->
-                 <g class="pie-face">
-                    <!-- Remaining Segment (Bottom Layer) -->
-                    <circle id="progressPie3DRemaining" cx="128" cy="128" r="115" stroke="rgba(0,0,0,0.05)" stroke-width="24" fill="transparent" 
-                            stroke-dasharray="722" stroke-dashoffset="0"
-                            class="transition-all duration-1000 ease-out" stroke-linecap="butt" />
-                    <!-- Completed Segment (Top Layer) -->
-                    <circle id="progressPie3D" cx="128" cy="128" r="115" stroke="url(#pieGradientMain)" stroke-width="24" fill="transparent" 
-                            stroke-dasharray="722" stroke-dashoffset="722"
-                            class="transition-all duration-1000 cubic-bezier(0.34, 1.56, 0.64, 1)" stroke-linecap="round" />
-                 </g>
-               </svg>
-             </div>
-
-             <!-- Floating stats in center - adjusted for 3D tilt -->
-             <div class="absolute top-[52%] left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center pointer-events-none z-10 w-full">
-                <span id="progressPiePercent" class="text-6xl lg:text-7xl font-black text-slate-900 dark:text-white percent-glow leading-none tracking-tighter">0%</span>
-                <span id="progressPieStats" class="text-[10px] text-indigo-600 uppercase tracking-[0.3em] font-bold mt-2 opacity-90">0/0 Tasks</span>
-             </div>
-          </div>
 
           <!-- Progress Trend Line Graph - Enhanced -->
           <div class="mt-6 p-6 rounded-[2rem] glass-card-inner border border-slate-200 dark:border-white/5 relative overflow-hidden">

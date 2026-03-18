@@ -95,7 +95,11 @@ function showToast(msg, type = 'success') {
 // ─── API ─────────────────────────────────────
 async function apiFetch(url, options = {}) {
   const res = await fetch(url, {
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 
+      'Content-Type': 'application/json',
+      'Cache-Control': 'no-cache',
+      'Pragma': 'no-cache'
+    },
     ...options,
   });
   if (!res.ok) {
@@ -897,12 +901,15 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.innerHTML = `<svg class="animate-spin inline w-4 h-4 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>Adding...`;
 
     try {
-      await createTask(title, description, currentDate);
+      const newTask = await createTask(title, description, currentDate);
       titleEl.value = '';
       descEl.value = '';
       showToast('Task added! ✅');
-      // Re-fetch from server to guarantee fresh, correctly ordered list
-      await loadTasks();
+      // Add to local array directly instead of re-fetching
+      allTasks.push(newTask);
+      renderTasks();
+      await refreshStats();
+      if (graphLoaded) loadGraph();
     } catch (err) {
       // Server-side duplicate or other error
       showToast('⚠️ ' + err.message, 'error');

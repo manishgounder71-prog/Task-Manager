@@ -149,16 +149,29 @@ router.post('/', async (req, res) => {
       return res.status(409).json({ error: 'This task is already added for this date!' });
     }
 
-    const result = await db.run(
+    // Insert and get the ID
+    const insertResult = await db.run(
       'INSERT INTO tasks (title, description, date) VALUES (?, ?, ?)',
       [title.trim(), description || '', date]
     );
 
-    const task = await db.get('SELECT * FROM tasks WHERE id = ?', [result.lastInsertRowid]);
-    res.status(201).json({ ...task, is_done: !!task.is_done });
+    const newId = insertResult.lastInsertRowid;
+    const now = new Date().toISOString();
+    
+    // Return the task directly without fetching
+    return res.status(201).json({
+      id: newId,
+      title: title.trim(),
+      description: description || '',
+      date,
+      is_done: false,
+      created_at: now,
+      updated_at: now
+    });
   } catch (error) {
     console.error('Error creating task:', error);
-    res.status(500).json({ error: 'Failed to create task', detail: error.message });
+    const errorMsg = error && error.message ? error.message : 'Unknown error';
+    res.status(500).json({ error: 'Failed to create task', detail: errorMsg });
   }
 });
 

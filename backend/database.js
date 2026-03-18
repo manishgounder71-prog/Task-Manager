@@ -124,7 +124,10 @@ async function get(sql, params = []) {
 async function run(sql, params = []) {
   await initDB();
   if (dbType === 'postgres') {
-    const res = await getPool().query(convertPlaceholders(sql), params);
+    // Add RETURNING id if not already present
+    const needsReturning = !sql.toLowerCase().includes('returning');
+    const query = needsReturning ? sql + ' RETURNING id' : sql;
+    const res = await getPool().query(convertPlaceholders(query), params);
     return { lastInsertRowid: res.rows[0]?.id || null };
   } else {
     // Strip 'RETURNING id' or similar for SQLite

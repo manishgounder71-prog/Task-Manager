@@ -850,7 +850,84 @@ async function loadGraph() {
     setEl('statTotal', total30);
     setEl('statDone',  done30);
     setEl('statRate',  `${rate30}%`);
+    
+    // Update real-time progress bar
+    updateCompletionProgress(rate30);
   } catch (e) { console.error('loadGraph error', e); }
+}
+
+/**
+ * Updates the real-time completion progress bar with animations
+ */
+function updateCompletionProgress(rate) {
+  const progressBar = document.getElementById('completionProgressBar');
+  const progressGlow = document.getElementById('completionProgressGlow');
+  const rateDisplay = document.getElementById('completionRateDisplay');
+  const bgPulse = document.getElementById('completionBgPulse');
+  
+  if (!progressBar) return;
+  
+  // Animate the progress bar
+  progressBar.style.width = `${rate}%`;
+  
+  // Add glow effect based on progress
+  if (progressGlow) {
+    progressGlow.style.width = `${rate}%`;
+    progressGlow.style.opacity = rate > 0 ? '0.6' : '0';
+  }
+  
+  // Trigger background pulse
+  if (bgPulse) {
+    bgPulse.style.opacity = '1';
+    setTimeout(() => {
+      if (bgPulse) bgPulse.style.opacity = '0';
+    }, 500);
+  }
+  
+  // Animate the rate counter
+  if (rateDisplay) {
+    animateCounter(rateDisplay, rate, '%');
+  }
+  
+  // Color change based on rate
+  if (rate >= 80) {
+    progressBar.classList.add('bg-gradient-to-r', 'from-emerald-500', 'to-emerald-400');
+    progressBar.classList.remove('from-indigo-500', 'via-purple-500', 'to-indigo-500');
+  } else if (rate >= 50) {
+    progressBar.classList.add('bg-gradient-to-r', 'from-amber-500', 'to-amber-400');
+    progressBar.classList.remove('from-emerald-500', 'to-emerald-400', 'from-indigo-500', 'via-purple-500', 'to-indigo-500');
+  } else {
+    progressBar.classList.add('bg-gradient-to-r', 'from-indigo-500', 'via-purple-500', 'to-indigo-500');
+    progressBar.classList.remove('from-emerald-500', 'to-emerald-400', 'from-amber-500', 'to-amber-400');
+  }
+}
+
+/**
+ * Animates a counter element
+ */
+function animateCounter(element, targetValue, suffix = '') {
+  const currentValue = parseInt(element.textContent) || 0;
+  const duration = 500;
+  const startTime = performance.now();
+  
+  function update(currentTime) {
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const easeOut = 1 - Math.pow(1 - progress, 3);
+    const current = Math.round(currentValue + (targetValue - currentValue) * easeOut);
+    
+    element.textContent = `${current}${suffix}`;
+    
+    // Add animation class briefly
+    element.classList.add('count-animate');
+    setTimeout(() => element.classList.remove('count-animate'), 300);
+    
+    if (progress < 1) {
+      requestAnimationFrame(update);
+    }
+  }
+  
+  requestAnimationFrame(update);
 }
 
 function setEl(id, val) {

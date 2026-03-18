@@ -9,6 +9,11 @@ let currentDate = todayStr();
 let allTasks = [];
 let activeFilter = 'all';
 
+// ─── Theme Helper ────────────────────────────
+function isDarkMode() {
+  return document.documentElement.classList.contains('dark');
+}
+
 // ─── Interactive Effects ─────────────────────
 window.handleBentoHover = function(e, el) {
   const rect = el.getBoundingClientRect();
@@ -263,7 +268,7 @@ function updatePieChart(completed, total) {
   edge.style.strokeDashoffset = offset;
 
   // Dynamic colors & Glow
-  let remainingColor = 'rgba(255,255,255,0.05)';
+  let remainingColor = isDarkMode() ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
   if (pct === 100) {
     remainingColor = 'rgba(16, 185, 129, 0.1)'; 
     pie.style.filter = 'drop-shadow(0 0 15px rgba(99, 102, 241, 0.6))';
@@ -371,13 +376,13 @@ function updateBentoTasks() {
   }
 
   bentoList.innerHTML = previewTasks.map(t => `
-    <div class="grid grid-cols-12 gap-3 px-3 py-2.5 bg-white/2 hover:bg-white/5 rounded-xl border border-transparent hover:border-white/5 transition-all group/row">
+    <div class="grid grid-cols-12 gap-3 px-3 py-2.5 bg-slate-50 dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 rounded-xl border border-transparent hover:border-slate-200 dark:hover:border-white/10 transition-all group/row">
       <div class="col-span-8 flex items-center gap-3 min-width-0">
-        <div class="w-1.5 h-1.5 rounded-full ${t.is_done ? 'bg-slate-600' : 'bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.5)]'} flex-shrink-0"></div>
-        <span class="text-xs ${t.is_done ? 'text-slate-500 line-through' : 'text-slate-200'} truncate font-medium">${escapeHtml(t.title)}</span>
+        <div class="w-1.5 h-1.5 rounded-full ${t.is_done ? 'bg-slate-300 dark:bg-slate-600' : 'bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.5)]'} flex-shrink-0"></div>
+        <span class="text-xs ${t.is_done ? 'text-slate-400 dark:text-slate-500 line-through' : 'text-slate-700 dark:text-slate-200'} truncate font-medium">${escapeHtml(t.title)}</span>
       </div>
       <div class="col-span-4 flex items-center justify-end">
-        <div class="px-2 py-0.5 rounded-md text-[9px] font-bold uppercase tracking-tighter ${t.is_done ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20' : 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20'}">
+        <div class="px-2 py-0.5 rounded-md text-[9px] font-bold uppercase tracking-tighter ${t.is_done ? 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/20' : 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20'}">
           ${t.is_done ? 'Completed' : 'Active'}
         </div>
       </div>
@@ -724,9 +729,9 @@ function renderHeatmap(history) {
       const isFuture = (date > todayStr);
       const opacity = isFuture ? 0.02 : OPACITIES[level];
 
-      cell.style.background = `rgba(255,255,255,${opacity})`;
+      cell.style.background = isFuture ? (isDarkMode() ? `rgba(255,255,255,0.02)` : `rgba(0,0,0,0.03)`) : (isDarkMode() ? `rgba(255,255,255,${opacity})` : `rgba(79, 70, 229, ${opacity})`);
       if (isToday) {
-        cell.style.boxShadow = '0 0 0 2px rgba(255,255,255,0.4)';
+        cell.style.boxShadow = `0 0 0 2px ${isDarkMode() ? 'rgba(255,255,255,0.4)' : 'rgba(79, 70, 229, 0.4)'}`;
       }
 
       if (!isFuture) {
@@ -782,14 +787,14 @@ function renderBarChart(history) {
     const bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
     bg.setAttribute('x', x); bg.setAttribute('y', H - totalH);
     bg.setAttribute('width', barW); bg.setAttribute('height', totalH);
-    bg.setAttribute('fill', 'rgba(255,255,255,0.1)'); bg.setAttribute('rx', 3);
+    bg.setAttribute('fill', isDarkMode() ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'); bg.setAttribute('rx', 3);
     svg.appendChild(bg);
 
     if (doneH > 0) {
       const done = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
       done.setAttribute('x', x); done.setAttribute('y', H - doneH);
       done.setAttribute('width', barW); done.setAttribute('height', doneH);
-      done.setAttribute('fill', 'rgba(255,255,255,0.85)'); done.setAttribute('rx', 3);
+      done.setAttribute('fill', isDarkMode() ? 'rgba(255,255,255,0.85)' : 'rgba(79, 70, 229, 0.85)'); done.setAttribute('rx', 3);
       const t = document.createElementNS('http://www.w3.org/2000/svg', 'title');
       t.textContent = `${day.date}: ${day.completed}/${day.total} done`;
       done.appendChild(t);
@@ -811,6 +816,26 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initial load
   loadTasks();
   initParticles();
+
+  // Theme toggle initialization
+  const themeToggleBtn = document.getElementById('themeToggle');
+  const htmlEl = document.documentElement;
+  
+  if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    htmlEl.classList.add('dark');
+  } else {
+    htmlEl.classList.remove('dark');
+  }
+
+  if (themeToggleBtn) {
+    themeToggleBtn.addEventListener('click', () => {
+      htmlEl.classList.toggle('dark');
+      localStorage.setItem('theme', htmlEl.classList.contains('dark') ? 'dark' : 'light');
+      
+      updateProgress(); // Redraws pie charts and bento lists
+      if (graphLoaded) loadGraph(); // Redraws SVGs
+    });
+  }
 
   // Date navigation
   document.getElementById('prevDay').addEventListener('click', () => shiftDate(-1));

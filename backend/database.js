@@ -7,7 +7,10 @@ let dbInitialized = false;
 function getPool() {
   if (!pool) {
     if (!process.env.DATABASE_URL) {
-      throw new Error('DATABASE_URL environment variable is not set');
+      throw new Error(
+        'DATABASE_URL environment variable is not set. ' +
+        'If you are deploying to Render or Vercel, please add DATABASE_URL to your environment variables.'
+      );
     }
     pool = new Pool({
       connectionString: process.env.DATABASE_URL,

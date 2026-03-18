@@ -557,8 +557,8 @@
           </div>
         </div>
 
-        <!-- Feature 3: Progress Pie -->
-        <div class="bg-white dark:bg-zinc-900/50 rounded-2xl lg:rounded-[2.5rem] p-5 lg:p-8 bento-card border border-slate-200 dark:border-white/5 shadow-xl transition-colors flex flex-col justify-between" onmousemove="handleBentoHover(event,this)">
+        <!-- Feature 3: Progress Pie & Live Graph -->
+        <div class="bg-white dark:bg-zinc-900/50 rounded-2xl lg:rounded-[2.5rem] p-5 lg:p-8 bento-card border border-slate-200 dark:border-white/5 shadow-xl transition-colors flex flex-col justify-between gap-4" onmousemove="handleBentoHover(event,this)">
           <div>
             <div class="flex items-center gap-3 mb-3">
               <div class="w-10 h-10 bg-purple-600 dark:bg-purple-500 rounded-xl flex items-center justify-center text-white flex-shrink-0">
@@ -566,10 +566,13 @@
               </div>
               <h3 class="text-lg lg:text-2xl font-bold text-slate-900 dark:text-white">Daily Progress</h3>
             </div>
-            <p class="text-slate-600 dark:text-slate-400 text-sm lg:text-base">Real-time completion status.</p>
+            <p class="text-slate-600 dark:text-slate-400 text-sm lg:text-base">Real-time completion.</p>
           </div>
-          <div class="mt-4 flex flex-col items-center justify-center relative">
-              <svg class="w-36 h-36 lg:w-44 lg:h-44 overflow-visible" viewBox="0 0 100 100">
+          
+          <div class="flex flex-col sm:flex-row items-center gap-4">
+            <!-- Pie Chart -->
+            <div class="relative flex-shrink-0">
+              <svg class="w-32 h-32 lg:w-40 lg:h-40" viewBox="0 0 100 100">
                 <defs>
                   <linearGradient id="pieGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                     <stop offset="0%" stop-color="#a855f7" />
@@ -584,10 +587,54 @@
                   stroke-dasharray="251.32" stroke-dashoffset="251.32" filter="url(#pieGlow)"
                   style="transform: rotate(-90deg); transform-origin: center; transition: stroke-dashoffset 1s ease-out;"/>
               </svg>
-              <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
-                <span id="progressPiePercent" class="text-3xl lg:text-4xl font-black text-slate-900 dark:text-white leading-none">0%</span>
-                <span id="progressPieStats" class="text-[10px] lg:text-xs text-purple-600 dark:text-purple-400 uppercase tracking-wider font-bold mt-1">0/0 Tasks</span>
+              <div class="absolute inset-0 flex flex-col items-center justify-center">
+                <span id="progressPiePercent" class="text-2xl lg:text-3xl font-black text-slate-900 dark:text-white leading-none">0%</span>
+                <span id="progressPieStats" class="text-[9px] lg:text-[10px] text-purple-600 dark:text-purple-400 uppercase tracking-wider font-bold">0/0 Tasks</span>
               </div>
+            </div>
+            
+            <!-- Live Moving Line Graph -->
+            <div class="flex-1 w-full">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Weekly Trend</span>
+                <span id="liveTrendIcon" class="text-xs">📈</span>
+              </div>
+              <div class="relative h-20 lg:h-24 bg-slate-50 dark:bg-white/5 rounded-xl p-2 overflow-hidden">
+                <svg id="liveLineGraph" class="w-full h-full" viewBox="0 0 100 50" preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="liveGraphGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="#a855f7" stop-opacity="0.4" />
+                      <stop offset="100%" stop-color="#a855f7" stop-opacity="0" />
+                    </linearGradient>
+                    <filter id="liveGlow">
+                      <feGaussianBlur stdDeviation="1" result="blur"/>
+                      <feMerge>
+                        <feMergeNode in="blur"/>
+                        <feMergeNode in="SourceGraphic"/>
+                      </feMerge>
+                    </filter>
+                  </defs>
+                  <!-- Grid lines -->
+                  <line x1="0" y1="12.5" x2="100" y2="12.5" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>
+                  <line x1="0" y1="25" x2="100" y2="25" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>
+                  <line x1="0" y1="37.5" x2="100" y2="37.5" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>
+                  <!-- Area fill -->
+                  <path id="liveGraphArea" fill="url(#liveGraphGradient)" d="M0,50 L0,50 L20,50 L40,50 L60,50 L80,50 L100,50 L100,50 Z"/>
+                  <!-- Main line -->
+                  <path id="liveGraphLine" fill="none" stroke="#a855f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" filter="url(#liveGlow)" d="M0,50 L20,50 L40,50 L60,50 L80,50 L100,50"/>
+                  <!-- Animated dot -->
+                  <circle id="liveGraphDot" cx="100" cy="50" r="3" fill="#a855f7" filter="url(#liveGlow)">
+                    <animate attributeName="r" values="3;4;3" dur="1.5s" repeatCount="indefinite"/>
+                  </circle>
+                </svg>
+              </div>
+              <div class="flex justify-between mt-1 text-[9px] text-slate-500">
+                <span>Mon</span>
+                <span>Wed</span>
+                <span>Fri</span>
+                <span>Sun</span>
+              </div>
+            </div>
           </div>
         </div>
 

@@ -291,6 +291,60 @@ function updatePieChart(completed, total) {
     if (progress < 1) requestAnimationFrame(animate);
   }
   requestAnimationFrame(animate);
+  
+  updateLiveGraph(pct);
+}
+
+/**
+ * Updates the live moving line graph with current progress
+ */
+let liveGraphData = [0, 0, 0, 0, 0, 0, 0]; // 7 days of data
+function updateLiveGraph(currentPct) {
+  // Shift data left and add new value
+  liveGraphData.shift();
+  liveGraphData.push(currentPct);
+  
+  const line = document.getElementById('liveGraphLine');
+  const area = document.getElementById('liveGraphArea');
+  const dot = document.getElementById('liveGraphDot');
+  const trendIcon = document.getElementById('liveTrendIcon');
+  
+  if (!line || !area) return;
+  
+  // Convert data to SVG path
+  const points = liveGraphData.map((val, i) => {
+    const x = (i / 6) * 100;
+    const y = 50 - (val / 100) * 45; // Scale to fit in viewBox
+    return `${x},${y}`;
+  });
+  
+  const linePath = `M${points.join(' L')}`;
+  const areaPath = `M0,50 L${points.join(' L')} L100,50 Z`;
+  
+  // Animate the line drawing
+  line.style.transition = 'd 0.5s ease-out';
+  line.setAttribute('d', linePath);
+  area.setAttribute('d', areaPath);
+  
+  // Update dot position
+  const lastX = 100;
+  const lastY = 50 - (currentPct / 100) * 45;
+  if (dot) {
+    dot.setAttribute('cx', lastX);
+    dot.setAttribute('cy', lastY);
+  }
+  
+  // Update trend icon
+  if (trendIcon) {
+    const prev = liveGraphData[liveGraphData.length - 2];
+    if (currentPct > prev) {
+      trendIcon.textContent = '📈';
+    } else if (currentPct < prev) {
+      trendIcon.textContent = '📉';
+    } else {
+      trendIcon.textContent = '➡️';
+    }
+  }
 }
 
 /**

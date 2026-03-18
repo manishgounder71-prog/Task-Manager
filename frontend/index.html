@@ -534,7 +534,7 @@
               </div>
             </div>
             <div class="flex items-center gap-4">
-              <button id="refreshGraph" class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-white transition-all">
+              <button id="refreshProgress" class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-white transition-all">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
               </button>
             </div>
@@ -715,17 +715,14 @@
             <div id="heatmap" class="flex gap-[3px] flex-1 pb-2"></div>
           </div>
         </div>
-            <!-- Grid (injected by JS) -->
-            <div id="heatmap" class="flex gap-[3px] overflow-x-auto flex-1 pb-2"></div>
-          </div>
 
-          <!-- Floating tooltip (positioned by JS) -->
-          <div id="heatmapTooltip"
-            class="pointer-events-none fixed z-50 text-xs bg-slate-900 border border-slate-700 backdrop-blur-xl rounded-xl px-3.5 py-2.5 text-white shadow-2xl transition-opacity duration-150 opacity-0 whitespace-nowrap">
-            <div id="tooltipDate" class="font-bold mb-0.5"></div>
-            <div id="tooltipStats" class="text-slate-400"></div>
-          </div>
+        <!-- Floating tooltip (positioned by JS) -->
+        <div id="heatmapTooltip"
+          class="pointer-events-none fixed z-50 text-xs bg-slate-900 border border-slate-700 backdrop-blur-xl rounded-xl px-3.5 py-2.5 text-white shadow-2xl transition-opacity duration-150 opacity-0 whitespace-nowrap">
+          <div id="tooltipDate" class="font-bold mb-0.5"></div>
+          <div id="tooltipStats" class="text-slate-400"></div>
         </div>
+      </div>
 
         <!-- Legend -->
         <div class="flex items-center justify-between mt-6 pt-5 border-t border-white/5">

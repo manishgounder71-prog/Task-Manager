@@ -1394,7 +1394,7 @@ document.addEventListener('DOMContentLoaded', () => {
     graphObserver.observe(graphSection);
   }
 
-  // Refresh button
+  // Refresh button for heatmap
   const refreshBtn = document.getElementById('refreshGraph');
   if (refreshBtn) {
     refreshBtn.addEventListener('click', async () => {
@@ -1402,6 +1402,17 @@ document.addEventListener('DOMContentLoaded', () => {
       refreshBtn.style.transition = 'transform 0.6s ease';
       await loadGraph();
       setTimeout(() => { refreshBtn.style.transform = ''; }, 700);
+    });
+  }
+
+  // Refresh button for progress (in daily progress card)
+  const refreshProgressBtn = document.getElementById('refreshProgress');
+  if (refreshProgressBtn) {
+    refreshProgressBtn.addEventListener('click', () => {
+      refreshProgressBtn.style.transform = 'rotate(360deg)';
+      refreshProgressBtn.style.transition = 'transform 0.6s ease';
+      updateProgress();
+      setTimeout(() => { refreshProgressBtn.style.transform = ''; }, 700);
     });
   }
 

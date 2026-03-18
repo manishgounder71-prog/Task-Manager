@@ -283,24 +283,23 @@
 <!-- Navigation -->
 <nav class="fixed w-full z-50 bg-white/80 dark:bg-[#0a0a0c]/80 backdrop-blur-xl border-b border-slate-200 dark:border-white/5 transition-colors duration-300" data-purpose="main-nav">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex justify-between h-20 items-center">
+    <div class="flex justify-between h-16 lg:h-20 items-center">
       <div class="flex items-center gap-2 group cursor-pointer">
-        <div class="w-9 h-9 bg-indigo-600 dark:bg-white text-white dark:text-black rounded-lg flex items-center justify-center transition-transform group-hover:rotate-12 shadow-md shadow-indigo-200 dark:shadow-none">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+        <div class="w-8 h-8 lg:w-9 lg:h-9 bg-indigo-600 dark:bg-white text-white dark:text-black rounded-lg flex items-center justify-center transition-transform group-hover:rotate-12 shadow-md shadow-indigo-200 dark:shadow-none">
+          <svg class="w-4 h-4 lg:w-5 lg:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
         </div>
-        <span class="font-bold text-xl tracking-tight text-slate-900 dark:text-white">Daily Tasks</span>
+        <span class="font-bold text-lg lg:text-xl tracking-tight text-slate-900 dark:text-white">Daily Tasks</span>
       </div>
-      <div class="hidden md:flex items-center space-x-10">
+      
+      <!-- Desktop Nav -->
+      <div class="hidden lg:flex items-center space-x-8">
         <a class="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-white transition-colors" href="#app">Open App</a>
         <a class="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-white transition-colors" href="#features">Features</a>
-        <a class="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-white transition-colors" href="#how-it-works">How it Works</a>
-        <div class="flex items-center gap-5 ml-4">
+        <div class="flex items-center gap-4 ml-4">
           <button id="themeToggle" class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-white transition-all shadow-sm">
-            <!-- Moon (Light Mode) -->
             <svg id="themeIconDark" class="w-4 h-4 block dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
             </svg>
-            <!-- Sun (Dark Mode) -->
             <svg id="themeIconLight" class="w-4 h-4 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
             </svg>
@@ -316,6 +315,45 @@
           </div>
         </div>
       </div>
+      
+      <!-- Mobile Nav Button -->
+      <div class="flex lg:hidden items-center gap-3">
+        <button id="themeToggleMobile" class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-500 dark:text-slate-400">
+          <svg id="themeIconDarkMobile" class="w-4 h-4 block dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+          </svg>
+          <svg id="themeIconLightMobile" class="w-4 h-4 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+        </button>
+        <button id="mobileMenuBtn" class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-500 dark:text-slate-400">
+          <svg class="w-5 h-5 menu-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+          <svg class="w-5 h-5 close-icon hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden lg:hidden pb-4">
+      <div class="flex flex-col gap-3 pt-4 border-t border-slate-200 dark:border-white/10">
+        <a class="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-white transition-colors py-2" href="#app">Open App</a>
+        <a class="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-white transition-colors py-2" href="#features">Features</a>
+        <div class="flex items-center gap-6 py-2">
+          <div class="text-center">
+            <div id="streakCountMobile" class="text-lg font-bold text-slate-900 dark:text-white leading-none">0</div>
+            <div class="text-[10px] text-slate-500 font-semibold uppercase tracking-widest">🔥 Streak</div>
+          </div>
+          <div class="w-px h-8 bg-slate-200 dark:bg-white/10"></div>
+          <div class="text-center">
+            <div id="completedCountMobile" class="text-lg font-bold text-slate-900 dark:text-white leading-none">0/0</div>
+            <div class="text-[10px] text-slate-500 font-semibold uppercase tracking-widest">✅ Today</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </nav>
@@ -323,28 +361,27 @@
 <main class="relative z-10">
 
   <!-- Hero Section -->
-  <section class="relative pt-32 pb-20 lg:pt-56 lg:pb-40 overflow-hidden" data-purpose="hero" id="app">
+  <section class="relative pt-24 pb-16 lg:pt-40 lg:pb-32 overflow-hidden" data-purpose="hero" id="app">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-      <div class="lg:grid lg:grid-cols-2 lg:gap-16 items-start">
+      <div class="lg:grid lg:grid-cols-2 lg:gap-12 items-start">
 
-        <!-- Flipped Task List Panel (was Right, now Left) -->
-        <div class="mt-20 lg:mt-4 relative group animate-entrance order-2 lg:order-1" style="animation-delay:0.5s">
-          <div class="absolute -inset-10 bg-gradient-to-tr from-indigo-500/20 to-transparent rounded-[3rem] blur-3xl group-hover:from-indigo-500/30 transition-all duration-700"></div>
-          <div class="relative bg-white dark:bg-white/5 p-2 rounded-[2.5rem] shadow-2xl border border-slate-200 dark:border-white/10 backdrop-blur-sm overflow-hidden animate-float shadow-slate-200/50 dark:shadow-none transition-colors">
-            <div class="absolute inset-0 bg-gradient-to-b from-slate-50/50 dark:from-white/5 to-transparent pointer-events-none rounded-[2.5rem]"></div>
-            <div class="bg-slate-50 dark:bg-zinc-950/80 rounded-[2.2rem] p-6 min-h-[420px] flex flex-col border border-slate-100 dark:border-transparent transition-colors">
+        <!-- Task List Panel -->
+        <div class="mt-16 lg:mt-4 relative group animate-entrance order-2 lg:order-1" style="animation-delay:0.5s">
+          <div class="absolute -inset-10 bg-gradient-to-tr from-indigo-500/20 to-transparent rounded-[2rem] lg:rounded-[3rem] blur-3xl group-hover:from-indigo-500/30 transition-all duration-700"></div>
+          <div class="relative bg-white dark:bg-white/5 p-2 sm:p-3 rounded-2xl lg:rounded-[2.5rem] shadow-2xl border border-slate-200 dark:border-white/10 backdrop-blur-sm overflow-hidden animate-float shadow-slate-200/50 dark:shadow-none transition-colors">
+            <div class="bg-slate-50 dark:bg-zinc-950/80 rounded-xl lg:rounded-[2.2rem] p-4 sm:p-6 min-h-[350px] lg:min-h-[420px] flex flex-col border border-slate-100 dark:border-transparent transition-colors">
               <!-- Panel header -->
-              <div class="flex justify-between items-center mb-5">
-                <h2 class="text-slate-900 dark:text-white font-bold text-base">Today's Tasks</h2>
+              <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4 lg:mb-5">
+                <h2 class="text-slate-900 dark:text-white font-bold text-sm lg:text-base">Today's Tasks</h2>
                 <div class="flex gap-1 bg-slate-200/50 dark:bg-white/5 rounded-lg p-1">
-                  <button class="filter-btn active px-2.5 py-1 text-xs font-semibold text-white bg-indigo-600 dark:bg-white/10 rounded-md transition-all shadow-sm shadow-indigo-200 dark:shadow-none" data-filter="all">All</button>
-                  <button class="filter-btn px-2.5 py-1 text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-md transition-all" data-filter="active">Active</button>
-                  <button class="filter-btn px-2.5 py-1 text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-md transition-all" data-filter="done">Done</button>
+                  <button class="filter-btn active px-2 py-1 text-xs font-semibold text-white bg-indigo-600 dark:bg-white/10 rounded-md transition-all" data-filter="all">All</button>
+                  <button class="filter-btn px-2 py-1 text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-md transition-all" data-filter="active">Active</button>
+                  <button class="filter-btn px-2 py-1 text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-md transition-all" data-filter="done">Done</button>
                 </div>
               </div>
 
               <!-- Progress bar -->
-              <div id="progressSection" class="hidden mb-5">
+              <div id="progressSection" class="hidden mb-4 lg:mb-5">
                 <div class="flex justify-between items-center mb-2">
                   <span id="progressText" class="text-xs font-bold text-slate-600 dark:text-slate-300">0%</span>
                   <span id="progressCount" class="text-xs text-slate-500">0/0 tasks</span>
@@ -355,51 +392,51 @@
               </div>
 
               <!-- Loading -->
-              <div id="loadingState" class="flex flex-col items-center justify-center py-12 flex-1">
-                <div class="spinner mb-4"></div>
+              <div id="loadingState" class="flex flex-col items-center justify-center py-8 lg:py-12 flex-1">
+                <div class="spinner mb-3 lg:mb-4"></div>
                 <p class="text-slate-500 text-sm">Loading tasks...</p>
               </div>
 
               <!-- Empty State -->
-              <div id="emptyState" class="hidden flex flex-col items-center justify-center py-12 text-center flex-1">
-                <div class="w-14 h-14 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 shadow-sm dark:shadow-none rounded-2xl flex items-center justify-center mb-4 text-xl">📋</div>
+              <div id="emptyState" class="hidden flex flex-col items-center justify-center py-8 lg:py-12 text-center flex-1">
+                <div class="w-12 h-12 lg:w-14 lg:h-14 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 shadow-sm dark:shadow-none rounded-xl lg:rounded-2xl flex items-center justify-center mb-3 lg:mb-4 text-xl">📋</div>
                 <h3 class="text-slate-900 dark:text-white font-semibold text-sm mb-1">No tasks yet</h3>
-                <p class="text-slate-500 text-xs">Add your first task on the right!</p>
+                <p class="text-slate-500 text-xs">Add your first task below!</p>
               </div>
 
               <!-- Task List -->
-              <div id="taskList" class="flex flex-col gap-2 flex-1 overflow-y-auto max-h-[320px] pr-1"></div>
+              <div id="taskList" class="flex flex-col gap-2 flex-1 overflow-y-auto max-h-[280px] lg:max-h-[320px] pr-1"></div>
             </div>
           </div>
         </div>
 
-        <!-- Flipped Text + Task Form (was Left, now Right) -->
+        <!-- Text + Task Form -->
         <div class="text-center lg:text-left order-1 lg:order-2">
-          <span class="inline-flex items-center py-1 px-4 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-bold mb-6 uppercase tracking-[0.2em] animate-entrance shadow-sm" style="animation-delay:0.1s">
+          <span class="inline-flex items-center py-1 px-3 lg:px-4 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-bold mb-4 lg:mb-6 uppercase tracking-[0.2em] animate-entrance shadow-sm">
             <span class="w-2 h-2 bg-indigo-500 rounded-full mr-2 animate-pulse"></span>
             Productivity Redefined
           </span>
-          <h1 class="text-5xl lg:text-7xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.1] mb-8 animate-entrance transition-colors" style="animation-delay:0.2s">
+          <h1 class="text-3xl sm:text-4xl lg:text-6xl xl:text-7xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.1] mb-6 lg:mb-8 animate-entrance transition-colors" style="animation-delay:0.2s">
             Master Your Day,<br/>
             <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 dark:from-white via-purple-600 dark:via-slate-400 to-indigo-800 dark:to-slate-600">Effortlessly.</span>
           </h1>
-          <p class="text-lg text-slate-600 mb-10 max-w-xl mx-auto lg:mx-0 leading-relaxed animate-entrance" style="animation-delay:0.3s">
-            Stop juggling chaos. Daily Tasks combines intelligent scheduling with a beautiful interface to help you reclaim your time and hit every milestone.
+          <p class="text-base lg:text-lg text-slate-600 mb-6 lg:mb-10 max-w-xl mx-auto lg:mx-0 leading-relaxed animate-entrance" style="animation-delay:0.3s">
+            Stop juggling chaos. Daily Tasks combines intelligent scheduling with a beautiful interface to help you reclaim your time.
           </p>
 
           <!-- Date Navigation -->
-          <div class="animate-entrance" style="animation-delay:0.35s">
-            <div class="inline-flex items-center gap-3 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 shadow-sm dark:shadow-none rounded-2xl px-5 py-3 backdrop-blur-sm mb-6 transition-colors">
-              <button id="prevDay" class="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-white hover:border-indigo-300 dark:hover:border-white/30 hover:bg-indigo-50 dark:hover:bg-white/10 transition-all active:scale-95">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          <div class="animate-entrance mb-4 lg:mb-6" style="animation-delay:0.35s">
+            <div class="inline-flex items-center gap-2 sm:gap-3 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 shadow-sm dark:shadow-none rounded-xl lg:rounded-2xl px-3 sm:px-4 lg:px-5 py-2 lg:py-3 backdrop-blur-sm transition-colors">
+              <button id="prevDay" class="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-lg bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-white hover:border-indigo-300 dark:hover:border-white/30 transition-all active:scale-95">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
               </button>
-              <div class="flex items-center gap-3">
+              <div class="flex items-center gap-2 sm:gap-3">
                 <input type="date" id="datePicker" class="absolute opacity-0 w-0 h-0" />
-                <div id="dateText" class="text-slate-700 dark:text-white font-semibold text-sm cursor-pointer hover:text-indigo-600 dark:hover:text-slate-300 transition-colors select-none min-w-[200px] text-center"></div>
-                <button id="todayBtn" class="hidden text-xs font-bold text-indigo-600 dark:text-white/60 bg-indigo-50 dark:bg-white/10 border border-indigo-100 dark:border-white/10 px-2.5 py-1 rounded-full hover:bg-indigo-100 dark:hover:bg-white/20 transition-all">Today</button>
+                <div id="dateText" class="text-slate-700 dark:text-white font-semibold text-xs sm:text-sm cursor-pointer hover:text-indigo-600 dark:hover:text-slate-300 transition-colors select-none min-w-[140px] sm:min-w-[200px] text-center"></div>
+                <button id="todayBtn" class="hidden text-xs font-bold text-indigo-600 dark:text-white/60 bg-indigo-50 dark:bg-white/10 border border-indigo-100 dark:border-white/10 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full hover:bg-indigo-100 dark:hover:bg-white/20 transition-all">Today</button>
               </div>
-              <button id="nextDay" class="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-white hover:border-indigo-300 dark:hover:border-white/30 hover:bg-indigo-50 dark:hover:bg-white/10 transition-all active:scale-95">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              <button id="nextDay" class="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-lg bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-white hover:border-indigo-300 dark:hover:border-white/30 transition-all active:scale-95">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
               </button>
             </div>
           </div>
@@ -407,16 +444,31 @@
           <!-- Add Task Form -->
           <div class="animate-entrance" style="animation-delay:0.4s">
             <form id="addTaskForm">
-              <div class="flex flex-col sm:flex-row gap-3 max-w-xl mx-auto lg:mx-0">
+              <div class="flex flex-col gap-2 sm:gap-3 max-w-xl mx-auto lg:mx-0">
                 <input type="text" id="taskTitle" placeholder="What needs to be done?" required autocomplete="off" 
-                  class="flex-1 bg-white dark:bg-white/5 border border-slate-300 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 rounded-2xl px-5 py-3.5 text-sm font-medium focus:outline-none focus:border-indigo-500 dark:focus:border-white/30 focus:ring-4 focus:ring-indigo-500/10 dark:focus:ring-0 transition-all shadow-sm dark:shadow-none"/>
-                <button type="submit" class="px-6 py-3.5 bg-indigo-600 dark:bg-white text-white dark:text-black rounded-2xl font-bold text-sm hover:bg-indigo-700 dark:hover:bg-slate-200 transition-all hover:scale-105 active:scale-95 shadow-xl shadow-indigo-600/20 dark:shadow-white/10 btn-glow whitespace-nowrap flex items-center gap-2">
+                  class="w-full bg-white dark:bg-white/5 border border-slate-300 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 rounded-xl sm:rounded-2xl px-4 sm:px-5 py-3 sm:py-3.5 text-sm font-medium focus:outline-none focus:border-indigo-500 dark:focus:border-white/30 focus:ring-4 focus:ring-indigo-500/10 dark:focus:ring-0 transition-all shadow-sm dark:shadow-none"/>
+                <input type="text" id="taskDescription" placeholder="Description (optional)" autocomplete="off"
+                  class="w-full bg-white dark:bg-white/5 border border-slate-300 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 rounded-xl sm:rounded-2xl px-4 sm:px-5 py-2.5 sm:py-3 text-sm focus:outline-none focus:border-indigo-500 dark:focus:border-white/30 focus:ring-4 focus:ring-indigo-500/10 dark:focus:ring-0 transition-all shadow-sm dark:shadow-none"/>
+                <button type="submit" class="w-full sm:w-auto px-6 py-3 sm:py-3.5 bg-indigo-600 dark:bg-white text-white dark:text-black rounded-xl sm:rounded-2xl font-bold text-sm hover:bg-indigo-700 dark:hover:bg-slate-200 transition-all shadow-xl shadow-indigo-600/20 dark:shadow-white/10 btn-glow whitespace-nowrap flex items-center justify-center gap-2">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                   Add Task
                 </button>
               </div>
-              <input type="text" id="taskDescription" placeholder="Description (optional)" autocomplete="off"
-                class="mt-3 w-full max-w-xl bg-white dark:bg-white/5 border border-slate-300 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 rounded-2xl px-5 py-3 text-sm focus:outline-none focus:border-indigo-500 dark:focus:border-white/30 focus:ring-4 focus:ring-indigo-500/10 dark:focus:ring-0 transition-all mx-auto lg:mx-0 block shadow-sm dark:shadow-none"/>
+            </form>
+          </div>
+
+          <!-- Trust badges -->
+          <div class="mt-6 lg:mt-10 flex items-center justify-center lg:justify-start gap-4 sm:gap-6 text-slate-500 animate-entrance" style="animation-delay:0.5s">
+            <div class="flex gap-4 sm:gap-6 text-xs sm:text-sm font-bold">
+              <span id="heroStreak" class="text-slate-900 dark:text-white">0<span class="text-slate-500 font-normal ml-1">streak</span></span>
+              <span id="heroToday" class="text-slate-900 dark:text-white">0/0<span class="text-slate-500 font-normal ml-1">today</span></span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
             </form>
           </div>
 
@@ -435,37 +487,37 @@
   </section>
 
   <!-- Feature Bento Grid -->
-  <section class="py-32 bg-slate-50/50 dark:bg-[#0a0a0c]/50 transition-colors relative" data-purpose="features" id="features">
+  <section class="py-16 lg:py-32 bg-slate-50/50 dark:bg-[#0a0a0c]/50 transition-colors relative" data-purpose="features" id="features">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-20">
-        <h2 class="text-3xl lg:text-5xl font-bold text-slate-900 dark:text-white mb-6 transition-colors">Everything you need to thrive.</h2>
-        <p class="text-slate-500 max-w-2xl mx-auto text-lg">Powerful tools designed to stay out of your way and let you focus on what matters most.</p>
+      <div class="text-center mb-10 lg:mb-20">
+        <h2 class="text-2xl sm:text-3xl lg:text-5xl font-bold text-slate-900 dark:text-white mb-4 lg:mb-6 transition-colors">Everything you need to thrive.</h2>
+        <p class="text-slate-500 max-w-2xl mx-auto text-sm sm:text-lg">Powerful tools designed to stay out of your way and let you focus on what matters most.</p>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
         <!-- Feature 1: Large -->
-        <div class="md:col-span-2 bg-white dark:bg-zinc-900/50 rounded-[2.5rem] p-10 relative overflow-hidden bento-card border border-slate-200 dark:border-white/5 shadow-xl transition-colors group flex flex-col justify-between min-h-[400px]" onmousemove="handleBentoHover(event,this)">
+        <div class="lg:col-span-2 bg-white dark:bg-zinc-900/50 rounded-2xl lg:rounded-[2.5rem] p-6 lg:p-10 relative overflow-hidden bento-card border border-slate-200 dark:border-white/5 shadow-xl transition-colors group flex flex-col justify-between" onmousemove="handleBentoHover(event,this)">
           <div class="relative z-10">
-            <h3 class="text-3xl font-bold mb-4 text-slate-900 dark:text-white">Smart Date Scheduling</h3>
-            <p class="text-slate-600 dark:text-slate-400 max-w-md text-lg leading-relaxed">Add tasks for today, tomorrow, or any future date. All your plans, organized in one place.</p>
+            <h3 class="text-xl lg:text-3xl font-bold mb-2 lg:mb-4 text-slate-900 dark:text-white">Smart Date Scheduling</h3>
+            <p class="text-slate-600 dark:text-slate-400 max-w-md text-sm lg:text-lg leading-relaxed">Add tasks for today, tomorrow, or any future date.</p>
           </div>
-          <div class="mt-10 relative z-10 bg-slate-50 dark:bg-white/5 backdrop-blur-md p-6 rounded-3xl border border-slate-200 dark:border-white/10 group-hover:border-indigo-100 dark:group-hover:border-white/20 transition-all">
-            <div class="flex items-center gap-3 mb-4">
-              <div class="w-8 h-8 bg-indigo-600 dark:bg-white rounded-lg flex items-center justify-center text-white dark:text-black flex-shrink-0">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke-width="2"/><line x1="16" y1="2" x2="16" y2="6" stroke-width="2"/><line x1="8" y1="2" x2="8" y2="6" stroke-width="2"/><line x1="3" y1="10" x2="21" y2="10" stroke-width="2"/></svg>
+          <div class="mt-6 lg:mt-10 relative z-10 bg-slate-50 dark:bg-white/5 backdrop-blur-md p-4 lg:p-6 rounded-2xl lg:rounded-3xl border border-slate-200 dark:border-white/10 group-hover:border-indigo-100 dark:group-hover:border-white/20 transition-all">
+            <div class="flex items-center gap-2 lg:gap-3 mb-3 lg:mb-4">
+              <div class="w-7 h-7 lg:w-8 lg:h-8 bg-indigo-600 dark:bg-white rounded-lg flex items-center justify-center text-white dark:text-black flex-shrink-0">
+                <svg class="w-3.5 h-3.5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke-width="2"/><line x1="16" y1="2" x2="16" y2="6" stroke-width="2"/><line x1="8" y1="2" x2="8" y2="6" stroke-width="2"/><line x1="3" y1="10" x2="21" y2="10" stroke-width="2"/></svg>
               </div>
               <div>
-                <div class="text-slate-900 dark:text-white font-semibold text-sm">Today's Focus</div>
-                <div id="bentoHeaderStats" class="text-slate-500 text-xs">— tasks remaining</div>
+                <div class="text-slate-900 dark:text-white font-semibold text-xs lg:text-sm">Today's Focus</div>
+                <div id="bentoHeaderStats" class="text-slate-500 text-[10px] lg:text-xs">— tasks remaining</div>
               </div>
             </div>
             
             <!-- Table Headers -->
-            <div class="grid grid-cols-12 gap-3 px-3 py-2 border-b border-slate-200 dark:border-white/10 mb-2">
+            <div class="hidden sm:grid grid-cols-12 gap-3 px-3 py-2 border-b border-slate-200 dark:border-white/10 mb-2">
               <div class="col-span-8 text-[10px] font-bold uppercase tracking-widest text-slate-400">Task Title</div>
               <div class="col-span-4 text-[10px] font-bold uppercase tracking-widest text-slate-400 text-right">Status</div>
             </div>
 
-            <div id="bentoTasksList" class="flex flex-col gap-1 max-h-[180px] overflow-y-auto pr-1 custom-scrollbar">
+            <div id="bentoTasksList" class="flex flex-col gap-1 max-h-[140px] lg:max-h-[180px] overflow-y-auto pr-1 custom-scrollbar">
               <!-- Dynamically populated in JS -->
               <div class="flex items-center gap-3 px-3 py-2 bg-slate-50 dark:bg-white/2 border border-slate-100 dark:border-white/5 rounded-xl animate-pulse">
                 <div class="w-4 h-4 rounded-full border-2 border-slate-200 dark:border-white/10 flex-shrink-0"></div>
@@ -476,13 +528,13 @@
         </div>
 
         <!-- Feature 2: Progress Pie -->
-        <div class="bg-white dark:bg-zinc-900/50 rounded-[2.5rem] p-10 bento-card border border-slate-200 dark:border-white/5 shadow-xl transition-colors flex flex-col justify-between group min-h-[400px]" onmousemove="handleBentoHover(event,this)">
+        <div class="bg-white dark:bg-zinc-900/50 rounded-2xl lg:rounded-[2.5rem] p-6 lg:p-10 bento-card border border-slate-200 dark:border-white/5 shadow-xl transition-colors flex flex-col justify-between" onmousemove="handleBentoHover(event,this)">
           <div>
-            <h3 class="text-2xl font-bold mb-3 text-slate-900 dark:text-white">Daily Progress</h3>
-            <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">Your real-time completion status for today.</p>
+            <h3 class="text-xl lg:text-2xl font-bold mb-2 lg:mb-3 text-slate-900 dark:text-white">Daily Progress</h3>
+            <p class="text-slate-600 dark:text-slate-400 text-xs lg:text-sm leading-relaxed">Your real-time completion status.</p>
           </div>
-          <div class="mt-4 flex flex-col items-center justify-center relative h-64">
-              <svg class="w-56 h-56 overflow-visible" viewBox="0 0 100 100">
+          <div class="mt-4 flex flex-col items-center justify-center relative h-52 lg:h-64">
+              <svg class="w-40 h-40 lg:w-56 lg:h-56 overflow-visible" viewBox="0 0 100 100">
                 <defs>
                   <linearGradient id="pieGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                     <stop offset="0%" stop-color="#a855f7" />
@@ -498,8 +550,8 @@
                   style="transform: rotate(-90deg); transform-origin: center; transition: stroke-dashoffset 1s ease-out;"/>
               </svg>
               <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
-                <span id="progressPiePercent" class="text-5xl font-black text-slate-900 dark:text-white leading-none">0%</span>
-                <span id="progressPieStats" class="text-xs text-indigo-600 dark:text-indigo-400 uppercase tracking-widest font-bold mt-1">0/0 Tasks</span>
+                <span id="progressPiePercent" class="text-4xl lg:text-5xl font-black text-slate-900 dark:text-white leading-none">0%</span>
+                <span id="progressPieStats" class="text-[10px] lg:text-xs text-indigo-600 dark:text-indigo-400 uppercase tracking-widest font-bold mt-1">0/0 Tasks</span>
               </div>
           </div>
 
@@ -587,35 +639,34 @@
         </div>
 
         <!-- Feature 3: AI Suggestions -->
-        <div class="md:col-span-3 bg-gradient-to-r from-indigo-50 dark:from-indigo-900/30 to-white dark:to-zinc-900/60 rounded-[3rem] p-8 lg:p-12 bento-card border border-slate-200 dark:border-white/5 shadow-xl transition-colors flex flex-col lg:flex-row items-center justify-between gap-10 group relative overflow-hidden" onmousemove="handleBentoHover(event,this)">
-          <div class="absolute top-0 right-0 w-64 h-64 bg-purple-500/10 blur-[100px] -mr-32 -mt-32"></div>
-          <div class="relative z-10 max-w-2xl">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-100 dark:bg-white/5 border border-indigo-200 dark:border-white/10 text-xs font-bold text-indigo-700 dark:text-white uppercase tracking-wider mb-6">
+        <div class="bg-gradient-to-r from-indigo-50 dark:from-indigo-900/30 to-white dark:to-zinc-900/60 rounded-2xl lg:rounded-[3rem] p-6 lg:p-12 bento-card border border-slate-200 dark:border-white/5 shadow-xl transition-colors flex flex-col justify-between gap-6 group relative overflow-hidden" onmousemove="handleBentoHover(event,this)">
+          <div class="relative z-10">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-100 dark:bg-white/5 border border-indigo-200 dark:border-white/10 text-xs font-bold text-indigo-700 dark:text-white uppercase tracking-wider mb-4 lg:mb-6">
               <span class="w-2 h-2 bg-indigo-400 rounded-full animate-ping"></span>
               AI Assistant
             </div>
-            <h3 class="text-3xl font-extrabold mb-4 text-slate-900 dark:text-white">Productivity Suggestions</h3>
-            <p class="text-slate-600 dark:text-slate-400 mb-8 text-lg leading-relaxed">Our AI analyzes your task list to provide actionable insights and help you maintain your flow.</p>
-            <div id="aiSuggestionContent" class="relative group/insight mb-8">
+            <h3 class="text-xl lg:text-3xl font-extrabold mb-2 lg:mb-4 text-slate-900 dark:text-white">Productivity Suggestions</h3>
+            <p class="text-slate-600 dark:text-slate-400 mb-4 lg:mb-8 text-sm lg:text-lg leading-relaxed">AI analyzes your task list to provide actionable insights.</p>
+            <div id="aiSuggestionContent" class="relative group/insight mb-4 lg:mb-8">
                <div class="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl blur opacity-20 group-hover/insight:opacity-40 transition duration-1000"></div>
-               <div id="aiResponseText" class="relative bg-white dark:bg-zinc-950/40 border border-slate-200 dark:border-white/10 shadow-sm p-6 lg:p-8 rounded-2xl text-slate-700 dark:text-slate-200 italic text-lg lg:text-xl leading-relaxed min-h-[100px] flex items-center">
+               <div id="aiResponseText" class="relative bg-white dark:bg-zinc-950/40 border border-slate-200 dark:border-white/10 shadow-sm p-4 lg:p-6 lg:p-8 rounded-xl lg:rounded-2xl text-slate-700 dark:text-slate-200 italic text-sm lg:text-lg lg:text-xl leading-relaxed min-h-[80px] lg:min-h-[100px] flex items-center">
                  "Add or complete some tasks to get personal productivity insights..."
                </div>
             </div>
 
-            <!-- New Ask AI Input -->
-            <div class="relative flex items-center gap-3 bg-white dark:bg-white/5 border border-slate-300 dark:border-white/10 shadow-inner dark:shadow-none p-2 rounded-2xl focus-within:border-indigo-500 dark:focus-within:border-indigo-500/50 focus-within:ring-2 dark:focus-within:ring-0 ring-indigo-200 transition-all">
-              <input type="text" id="aiChatInput" placeholder="Ask AI a question about your tasks..." 
-                     class="bg-transparent border-none focus:ring-0 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 px-4 w-full">
-              <button id="askAI" class="bg-indigo-600 dark:bg-white text-white dark:text-black font-bold px-6 py-3 rounded-xl hover:bg-indigo-700 dark:hover:bg-indigo-50 transition-all flex-shrink-0">
+            <!-- Ask AI Input -->
+            <div class="relative flex items-center gap-2 lg:gap-3 bg-white dark:bg-white/5 border border-slate-300 dark:border-white/10 shadow-inner dark:shadow-none p-1.5 lg:p-2 rounded-xl lg:rounded-2xl focus-within:border-indigo-500 dark:focus-within:border-indigo-500/50 focus-within:ring-2 dark:focus-within:ring-0 ring-indigo-200 transition-all">
+              <input type="text" id="aiChatInput" placeholder="Ask AI..." 
+                     class="bg-transparent border-none focus:ring-0 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 px-3 lg:px-4 w-full text-sm">
+              <button id="askAI" class="bg-indigo-600 dark:bg-white text-white dark:text-black font-bold px-4 lg:px-6 py-2 lg:py-3 rounded-lg lg:rounded-xl hover:bg-indigo-700 dark:hover:bg-indigo-50 transition-all flex-shrink-0 text-sm">
                 Ask AI
               </button>
             </div>
           </div>
           <div class="relative z-10 flex-shrink-0">
-            <button id="generateAI" class="px-10 py-5 bg-white dark:bg-white/10 text-indigo-600 dark:text-white shadow-sm border border-slate-200 dark:border-white/20 font-black rounded-2xl hover:bg-slate-50 dark:hover:bg-white dark:hover:text-black transition-all flex items-center gap-3 group">
-               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-               <span>Suggest</span>
+            <button id="generateAI" class="w-full lg:w-auto px-6 lg:px-10 py-3 lg:py-5 bg-white dark:bg-white/10 text-indigo-600 dark:text-white shadow-sm border border-slate-200 dark:border-white/20 font-black rounded-xl lg:rounded-2xl hover:bg-slate-50 dark:hover:bg-white dark:hover:text-black transition-all flex items-center justify-center gap-2 lg:gap-3">
+               <svg class="w-5 h-5 lg:w-6 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+               <span class="text-sm lg:text-base">Suggest</span>
             </button>
           </div>
 
@@ -626,42 +677,42 @@
   </section>
 
   <!-- Daily Record Graph Section -->
-  <section class="py-32 bg-slate-100 dark:bg-[#0a0a0c]/80 transition-colors relative reveal" id="daily-record">
+  <section class="py-16 lg:py-32 bg-slate-100 dark:bg-[#0a0a0c]/80 transition-colors relative reveal" id="daily-record">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
       <!-- Section header -->
-      <div class="text-center mb-16">
-        <span class="inline-flex items-center py-1 px-4 rounded-full bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 shadow-sm dark:shadow-none text-indigo-700 dark:text-white text-xs font-bold mb-5 uppercase tracking-[0.2em]">
+      <div class="text-center mb-10 lg:mb-16">
+        <span class="inline-flex items-center py-1 px-3 lg:px-4 rounded-full bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 shadow-sm dark:shadow-none text-indigo-700 dark:text-white text-xs font-bold mb-4 lg:mb-5 uppercase tracking-[0.2em]">
           <span class="w-2 h-2 bg-purple-500 rounded-full mr-2 animate-pulse"></span>
           Your Activity
         </span>
-        <h2 class="text-3xl lg:text-5xl font-bold text-slate-900 dark:text-white mb-4 transition-colors">Daily Record</h2>
-        <p class="text-slate-500 text-lg">Your full year of task activity, at a glance.</p>
+        <h2 class="text-2xl sm:text-3xl lg:text-5xl font-bold text-slate-900 dark:text-white mb-3 lg:mb-4 transition-colors">Daily Record</h2>
+        <p class="text-slate-500 text-sm lg:text-lg">Your full year of task activity, at a glance.</p>
       </div>
 
       <!-- ─── FULL-WIDTH HEATMAP CARD ─── -->
-      <div class="bg-white dark:bg-zinc-900/60 border border-slate-200 dark:border-white/5 rounded-[2.5rem] p-8 lg:p-12 bento-card shadow-xl dark:shadow-2xl transition-colors mb-8" onmousemove="handleBentoHover(event,this)">
+      <div class="bg-white dark:bg-zinc-900/60 border border-slate-200 dark:border-white/5 rounded-2xl lg:rounded-[2.5rem] p-6 lg:p-12 bento-card shadow-xl dark:shadow-2xl transition-colors mb-6 lg:mb-8" onmousemove="handleBentoHover(event,this)">
 
         <!-- Heatmap header -->
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 lg:mb-8">
           <div>
-            <h3 class="text-slate-900 dark:text-white font-bold text-2xl">Activity Heatmap</h3>
-            <p class="text-slate-500 text-sm mt-1">Last 52 weeks — hover a cell to see details</p>
+            <h3 class="text-lg lg:text-2xl font-bold text-slate-900 dark:text-white">Activity Heatmap</h3>
+            <p class="text-slate-500 text-xs lg:text-sm mt-1">Last 52 weeks</p>
           </div>
-          <div class="flex items-center gap-4">
+          <div class="flex flex-wrap items-center gap-2 lg:gap-4">
             <!-- Summary pills -->
-            <div class="flex gap-3">
-              <div class="bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/8 rounded-xl px-4 py-2 text-center min-w-[70px]">
-                <div id="hmStatActive" class="text-lg font-bold text-slate-900 dark:text-white leading-none">—</div>
-                <div class="text-[10px] text-slate-500 uppercase tracking-widest font-semibold mt-0.5">Active Days</div>
+            <div class="flex gap-2 lg:gap-3">
+              <div class="bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/8 rounded-xl px-3 lg:px-4 py-2 text-center min-w-[60px] lg:min-w-[70px]">
+                <div id="hmStatActive" class="text-base lg:text-lg font-bold text-slate-900 dark:text-white leading-none">—</div>
+                <div class="text-[8px] lg:text-[10px] text-slate-500 uppercase tracking-widest font-semibold mt-0.5">Active</div>
               </div>
-              <div class="bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/8 rounded-xl px-4 py-2 text-center min-w-[70px]">
-                <div id="hmStatPeak" class="text-lg font-bold text-slate-900 dark:text-white leading-none">—</div>
-                <div class="text-[10px] text-slate-500 uppercase tracking-widest font-semibold mt-0.5">Best Day</div>
+              <div class="bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/8 rounded-xl px-3 lg:px-4 py-2 text-center min-w-[60px] lg:min-w-[70px]">
+                <div id="hmStatPeak" class="text-base lg:text-lg font-bold text-slate-900 dark:text-white leading-none">—</div>
+                <div class="text-[8px] lg:text-[10px] text-slate-500 uppercase tracking-widest font-semibold mt-0.5">Best</div>
               </div>
-              <div class="bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/8 rounded-xl px-4 py-2 text-center min-w-[70px]">
-                <div id="hmStatStreak" class="text-lg font-bold text-slate-900 dark:text-white leading-none">—</div>
-                <div class="text-[10px] text-slate-500 uppercase tracking-widest font-semibold mt-0.5">Streak</div>
+              <div class="bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/8 rounded-xl px-3 lg:px-4 py-2 text-center min-w-[60px] lg:min-w-[70px]">
+                <div id="hmStatStreak" class="text-base lg:text-lg font-bold text-slate-900 dark:text-white leading-none">—</div>
+                <div class="text-[8px] lg:text-[10px] text-slate-500 uppercase tracking-widest font-semibold mt-0.5">Streak</div>
               </div>
             </div>
             <button id="refreshGraph" title="Refresh graph"
@@ -672,21 +723,24 @@
         </div>
 
         <!-- Heatmap container -->
-        <div class="relative">
+        <div class="relative -mx-2 px-2 overflow-x-auto">
           <!-- Month labels row (injected by JS) -->
-          <div id="heatmapMonths" class="flex gap-[3px] mb-1 pl-8 text-[10px] text-slate-600 font-semibold overflow-x-auto"></div>
+          <div id="heatmapMonths" class="flex gap-[3px] mb-1 pl-8 text-[10px] text-slate-600 font-semibold"></div>
 
           <div class="flex gap-1.5">
             <!-- Day-of-week labels -->
             <div class="flex flex-col gap-[3px] justify-around pt-1 pr-1 shrink-0">
-              <span class="text-[10px] text-slate-600 font-semibold h-[14px] leading-[14px]">Mon</span>
-              <span class="text-[10px] text-transparent h-[14px]">·</span>
-              <span class="text-[10px] text-slate-600 font-semibold h-[14px] leading-[14px]">Wed</span>
-              <span class="text-[10px] text-transparent h-[14px]">·</span>
-              <span class="text-[10px] text-slate-600 font-semibold h-[14px] leading-[14px]">Fri</span>
-              <span class="text-[10px] text-transparent h-[14px]">·</span>
-              <span class="text-[10px] text-transparent h-[14px]">·</span>
+              <span class="text-[10px] text-slate-600 font-semibold h-[12px] lg:h-[14px] leading-[12px] lg:leading-[14px]">Mon</span>
+              <span class="text-[10px] text-transparent h-[12px] lg:h-[14px]">·</span>
+              <span class="text-[10px] text-slate-600 font-semibold h-[12px] lg:h-[14px] leading-[12px] lg:leading-[14px]">Wed</span>
+              <span class="text-[10px] text-transparent h-[12px] lg:h-[14px]">·</span>
+              <span class="text-[10px] text-slate-600 font-semibold h-[12px] lg:h-[14px] leading-[12px] lg:leading-[14px]">Fri</span>
+              <span class="text-[10px] text-transparent h-[12px] lg:h-[14px]">·</span>
             </div>
+            <!-- Grid (injected by JS) -->
+            <div id="heatmap" class="flex gap-[3px] flex-1 pb-2"></div>
+          </div>
+        </div>
             <!-- Grid (injected by JS) -->
             <div id="heatmap" class="flex gap-[3px] overflow-x-auto flex-1 pb-2"></div>
           </div>
@@ -715,10 +769,10 @@
       </div>
 
       <!-- ─── Task Completion: Full Width Real-time Dashboard ─── -->
-      <div class="grid grid-cols-1 gap-8">
+      <div class="grid grid-cols-1 gap-6 lg:gap-8">
 
         <!-- Task Completion: Full Width Real-time Progress -->
-        <div class="bg-gradient-to-br from-white via-indigo-50/50 to-purple-50/30 dark:from-zinc-900/90 dark:via-indigo-950/30 dark:to-zinc-900/70 border border-slate-200 dark:border-white/15 transition-colors rounded-[2.5rem] p-10 bento-card shadow-2xl relative overflow-hidden" onmousemove="handleBentoHover(event,this)">
+        <div class="bg-gradient-to-br from-white via-indigo-50/50 to-purple-50/30 dark:from-zinc-900/90 dark:via-indigo-950/30 dark:to-zinc-900/70 border border-slate-200 dark:border-white/15 transition-colors rounded-2xl lg:rounded-[2.5rem] p-6 lg:p-10 bento-card shadow-2xl relative overflow-hidden" onmousemove="handleBentoHover(event,this)">
           <!-- Animated background -->
           <div class="absolute inset-0 bg-gradient-to-r from-indigo-500/5 via-purple-500/5 to-indigo-500/5 opacity-0 transition-opacity duration-1000" id="completionBgPulse"></div>
           
@@ -727,19 +781,19 @@
           
           <div class="relative z-10">
             <!-- Header with real-time indicators -->
-            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-8">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 lg:gap-4 mb-6 lg:mb-8">
               <div>
-                <div class="flex items-center gap-3 mb-2">
+                <div class="flex items-center gap-2 lg:gap-3 mb-2">
                   <div class="relative">
-                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white">Task Completion</h3>
-                    <span class="absolute -top-1 -right-6 w-2.5 h-2.5 bg-emerald-500 rounded-full animate-ping"></span>
-                    <span class="absolute -top-1 -right-6 w-2.5 h-2.5 bg-emerald-500 rounded-full"></span>
+                    <h3 class="text-lg lg:text-2xl font-bold text-slate-900 dark:text-white">Task Completion</h3>
+                    <span class="absolute -top-1 -right-5 lg:-right-6 w-2 h-2 lg:w-2.5 lg:h-2.5 bg-emerald-500 rounded-full animate-ping"></span>
+                    <span class="absolute -top-1 -right-5 lg:-right-6 w-2 h-2 lg:w-2.5 lg:h-2.5 bg-emerald-500 rounded-full"></span>
                   </div>
-                  <span class="px-3 py-1 bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 text-xs font-bold rounded-full">LIVE</span>
+                  <span class="px-2 lg:px-3 py-0.5 lg:py-1 bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 text-[10px] lg:text-xs font-bold rounded-full">LIVE</span>
                 </div>
-                <div class="flex items-center gap-4">
-                  <p class="text-slate-500 text-sm">Last 30 days • Updated in real-time</p>
-                  <div class="flex items-center gap-1.5 text-xs text-slate-400" id="lastUpdated">
+                <div class="flex items-center gap-2 lg:gap-4">
+                  <p class="text-slate-500 text-xs lg:text-sm">Last 30 days</p>
+                  <div class="flex items-center gap-1.5 text-[10px] lg:text-xs text-slate-400 hidden sm:flex" id="lastUpdated">
                     <span class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-pulse"></span>
                     <span id="lastUpdateTime">Just now</span>
                   </div>
@@ -959,6 +1013,44 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    
+    // Mobile menu toggle
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const menuIcon = mobileMenuBtn?.querySelector('.menu-icon');
+    const closeIcon = mobileMenuBtn?.querySelector('.close-icon');
+    
+    if (mobileMenuBtn && mobileMenu) {
+      mobileMenuBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+        menuIcon?.classList.toggle('hidden');
+        closeIcon?.classList.toggle('hidden');
+      });
+    }
+    
+    // Mobile theme toggle sync
+    const themeToggleMobile = document.getElementById('themeToggleMobile');
+    const themeToggle = document.getElementById('themeToggle');
+    if (themeToggleMobile && themeToggle) {
+      themeToggleMobile.addEventListener('click', () => {
+        themeToggle.click();
+      });
+    }
+    
+    // Sync mobile stats with desktop
+    const streakCount = document.getElementById('streakCount');
+    const completedCount = document.getElementById('completedCount');
+    const streakCountMobile = document.getElementById('streakCountMobile');
+    const completedCountMobile = document.getElementById('completedCountMobile');
+    
+    if (streakCountMobile && streakCount) {
+      const syncStreak = () => { streakCountMobile.textContent = streakCount.textContent; };
+      const syncCompleted = () => { completedCountMobile.textContent = completedCount.textContent; };
+      setInterval(() => {
+        syncStreak();
+        syncCompleted();
+      }, 500);
+    }
   });
 </script>
 

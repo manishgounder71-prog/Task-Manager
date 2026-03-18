@@ -278,6 +278,11 @@ router.post('/ai/suggest', async (req, res) => {
       return res.json({ suggestion: "You haven't added any tasks for today yet. Start by adding a few goals!" });
     }
 
+    // Check if API key is configured
+    if (!process.env.NVIDIA_API_KEY || process.env.NVIDIA_API_KEY === 'your_nvidia_api_key_here') {
+      return res.json({ suggestion: "AI suggestions are not configured. Add your NVIDIA_API_KEY to enable this feature!" });
+    }
+
     const taskSummary = tasks.map(t => `- ${t.title} (${t.is_done ? 'Done' : 'Pending'})`).join('\n');
     const prompt = `Here is my task list for today:\n${taskSummary}\n\nBased on these tasks, please give me a short, motivating one-sentence suggestion or insight to boost my productivity. Keep it under 25 words.`;
 
@@ -295,13 +300,19 @@ router.post('/ai/suggest', async (req, res) => {
       })
     });
 
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('NVIDIA API Error:', response.status, errorText);
+      return res.json({ suggestion: "AI service is temporarily unavailable. Please try again later!" });
+    }
+
     const data = await response.json();
     const suggestion = data.choices[0].message.content.trim();
     
     res.json({ suggestion });
   } catch (error) {
     console.error('AI Suggestion Error:', error);
-    res.status(500).json({ error: 'Failed to generate AI suggestion', detail: error.message });
+    res.json({ suggestion: "AI suggestion is taking a moment. Try again in a few seconds!" });
   }
 });
 
@@ -311,6 +322,11 @@ router.post('/ai/chat', async (req, res) => {
     const { question } = req.body;
     if (!question) {
       return res.status(400).json({ error: 'Question is required' });
+    }
+
+    // Check if API key is configured
+    if (!process.env.NVIDIA_API_KEY || process.env.NVIDIA_API_KEY === 'your_nvidia_api_key_here') {
+      return res.json({ answer: "AI chat is not configured. Add your NVIDIA_API_KEY to enable this feature!" });
     }
 
     const todayDate = getLocalToday();
@@ -342,13 +358,19 @@ Please provide a concise, helpful response (under 50 words) based on their tasks
       })
     });
 
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('NVIDIA API Error:', response.status, errorText);
+      return res.json({ answer: "AI service is temporarily unavailable. Please try again later!" });
+    }
+
     const data = await response.json();
     const answer = data.choices[0].message.content.trim();
     
     res.json({ answer });
   } catch (error) {
     console.error('AI Chat Error:', error);
-    res.status(500).json({ error: 'Failed to generate AI response', detail: error.message });
+    res.json({ answer: "AI chat is taking a moment. Try again in a few seconds!" });
   }
 });
 
